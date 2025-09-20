@@ -37,11 +37,11 @@ export default function Header() {
             <Link to="/" className="text-violet-500 hover:text-pink-400 font-medium">
               Home
             </Link>
-            <Link to="/products" className="text-violet-500 hover:text-pink-400 font-medium">
-              Products
+            <Link to="/pets" className="text-violet-500 hover:text-pink-400 font-medium">
+              Pets
             </Link>
-            <Link to="/service" className="text-violet-500 hover:text-pink-400 font-medium">
-              Service
+            <Link to="/services" className="text-violet-500 hover:text-pink-400 font-medium">
+              Services
             </Link>
             <Link to="/shop" className="text-violet-500 hover:text-pink-400 font-medium">
               Shop
@@ -52,10 +52,22 @@ export default function Header() {
               <i className="fas fa-shopping-cart text-violet-500 hover:text-pink-400"></i>
             </a>
 
-            {/* Login Button */}
-            <button className="bg-purple-700 hover:bg-purple-800 text-white px-4 py-2 rounded-md transition-colors flex items-center gap-2">
-              <FaUser /> Login
-            </button>
+            {/* Auth Buttons */}
+            <div className="flex items-center gap-3">
+              <Link
+                to="/login"
+                className="bg-purple-700 hover:bg-purple-800 text-white px-4 py-2 rounded-md transition-colors flex items-center gap-2"
+              >
+                <FaUser /> Login
+              </Link>
+              <Link
+                to="/register"
+                className="bg-purple-400 hover:bg-purple-500 text-white px-4 py-2 rounded-md transition-colors flex items-center gap-2"
+              >
+                Register
+              </Link>
+            </div>
+            
           </nav>
         </div>
       </div>
