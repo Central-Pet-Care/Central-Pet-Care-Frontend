@@ -1,8 +1,7 @@
-import axios from "axios";
 import Header from '../components/navBar';
 import Hero from '../components/hero';
-import { Toaster } from 'react-hot-toast'
 import AboutSection from "../components/aboutSec";
+import Footer from '../components/footer';
 
 export default function HomePage() {
   return (
@@ -10,6 +9,7 @@ export default function HomePage() {
       <Header/>
       <Hero />
       <AboutSection/>
+      <Footer/>
 
     </div>
     

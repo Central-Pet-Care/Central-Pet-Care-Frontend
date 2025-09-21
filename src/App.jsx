@@ -7,6 +7,7 @@ import HomePage from '../pages/homePage'
 
 
 
+
 function App() {
   const [count, setCount] = useState(0)
 
@@ -18,6 +19,8 @@ function App() {
       <Routes path="/*">
           <Route path= "/" element={<HomePage/>}/>
           <Route path= "/login" element={<LoginPage/>}/>
+         
+
 
       </Routes>
 
