@@ -1,4 +1,4 @@
-import { FaBars, FaTimes, FaUser } from "react-icons/fa";
+import { FaBars, FaTimes, FaUser, FaShoppingCart } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 export default function Header() {
@@ -40,6 +40,9 @@ export default function Header() {
             <Link to="/pets" className="text-violet-500 hover:text-pink-400 font-medium">
               Pets
             </Link>
+            <Link to="/adoptions" className="text-violet-500 hover:text-pink-400 font-medium">
+              Adoptions
+            </Link>
             <Link to="/services" className="text-violet-500 hover:text-pink-400 font-medium">
               Services
             </Link>
@@ -47,10 +50,16 @@ export default function Header() {
               Shop
             </Link>
 
-            {/* Icons */}
-            <a href="#">
-              <i className="fas fa-shopping-cart text-violet-500 hover:text-pink-400"></i>
-            </a>
+            {/* Cart Icon */}
+            {/* Cart Icon */}
+           <Link to="/cart" className="relative flex items-center">
+           <FaShoppingCart className="text-violet-500 hover:text-pink-400 text-xl" />
+           {/* Badge */}
+           {/* <span className="absolute -top-2 -right-3 bg-pink-400 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full shadow-md">
+            3
+           </span> */}
+           </Link>
+
 
             {/* Auth Buttons */}
             <div className="flex items-center gap-3">
@@ -67,7 +76,6 @@ export default function Header() {
                 Register
               </Link>
             </div>
-            
           </nav>
         </div>
       </div>
