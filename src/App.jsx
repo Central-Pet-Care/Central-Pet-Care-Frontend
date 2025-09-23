@@ -4,8 +4,8 @@ import LoginPage from '../pages/loginPage'
 import { BrowserRouter , Routes, Route } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import HomePage from '../pages/homePage'
-import ProductsPage from '../pages/productsPage'
-import ProductOverview from '../pages/home/productDetailPage'
+// import ProductsPage from '../pages/productsPage'
+// import ProductOverview from '../pages/home/productDetailPage'
 import Cart from '../pages/home/cart'
 
 
@@ -22,8 +22,8 @@ function App() {
       <Routes path="/*">
           <Route path= "/" element={<HomePage/>}/>
           <Route path= "/login" element={<LoginPage/>}/>
-          <Route path= "/shop" element={<ProductsPage/>}/>
-          <Route path="/product/:productId" element={<ProductOverview/>} />
+          {/* <Route path= "/shop" element={<ProductsPage/>}/> */}
+          {/* <Route path="/product/:productId" element={<ProductOverview/>} /> */}
           <Route path="/cart" element={<Cart />} />
 
          
