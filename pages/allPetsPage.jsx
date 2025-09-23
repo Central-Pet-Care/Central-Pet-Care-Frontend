@@ -59,7 +59,7 @@ export default function AllPetsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-300 via-blue-100 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-purple-200 via-blue-200 to-white">
       <Header />
       <PetHero />
       <AdoptionHighlights />
