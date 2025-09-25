@@ -4,8 +4,9 @@ import LoginPage from '../pages/loginPage'
 import { BrowserRouter , Routes, Route } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import HomePage from '../pages/homePage'
-import ProductsPage from '../pages/productsPage'
 import ProductOverview from '../pages/home/productDetailPage'
+import ProductsPage from '../pages/productsPage'
+import Cart from '../pages/home/cart'
 
 
 
