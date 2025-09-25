@@ -4,6 +4,7 @@ import LoginPage from '../pages/loginPage'
 import { BrowserRouter , Routes, Route } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import HomePage from '../pages/homePage'
+import AdminDashboard from '../pages/AdminDashboard'
 
 
 
@@ -20,6 +21,7 @@ function App() {
       <Routes path="/*">
           <Route path= "/" element={<HomePage/>}/>
           <Route path= "/login" element={<LoginPage/>}/>
+          <Route path= "/admin/*" element={<AdminDashboard/>}/>
            
 
          
@@ -28,6 +30,7 @@ function App() {
       </Routes>
 
       </BrowserRouter>
+
     </>
   )
 }

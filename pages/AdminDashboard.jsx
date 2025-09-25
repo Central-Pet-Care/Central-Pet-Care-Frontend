@@ -1,7 +1,10 @@
 import Sidebar from "../components/Sidebar";
 import AdminHeader from "../components/AdminHeader";
 import { Routes, Route } from "react-router-dom";
-import AdminAdoptionsPage from "./AdminAdoptionsPage";
+import AdminProductsPage from "./admin/adminProductPage";
+import AddProductForm from "./admin/addProductForm";
+import EditProductForm from "./admin/editProductForm";
+
 
 export default function AdminDashboard() {
   return (
@@ -49,7 +52,11 @@ export default function AdminDashboard() {
             />
 
             {/* 🔑 Added route for Adoptions */}
-            <Route path="adoptions" element={<AdminAdoptionsPage />} />
+            {/* <Route path="adoptions" element={<AdminAdoptionsPage />} /> */}
+            <Route path="products" element={<AdminProductsPage />} />
+            <Route path="/products/addProduct" element={<AddProductForm/>} />
+            <Route path="/products/editProduct/:productId" element={<EditProductForm/>} />
+            
           </Routes>
         </main>
       </div>
