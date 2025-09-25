@@ -119,7 +119,7 @@ export default function ShippingScreen() {
 
     try {
       const orderData = {
-        orderId: "ORD" + Date.now(), // make sure orderId is unique
+        // ❌ Removed frontend orderId generation
         orderedItems: mergedCart.map((item) => ({
           itemType: "product",
           itemId: item.productId,
