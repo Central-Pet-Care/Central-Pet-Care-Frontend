@@ -7,6 +7,8 @@ import HomePage from '../pages/homePage'
 import ProductOverview from '../pages/home/productDetailPage'
 import ProductsPage from '../pages/productsPage'
 import Cart from '../pages/home/cart'
+import ShippingScreen from '../pages/home/shipping'
+
 
 
 
@@ -26,6 +28,8 @@ function App() {
           <Route path= "/shop" element={<ProductsPage/>}/>
           <Route path="/product/:productId" element={<ProductOverview/>} />
           <Route path="/cart" element={<Cart />} />
+           <Route path="/shipping" element={<ShippingScreen />} />
+          
 
          
 
