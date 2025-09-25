@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { loadCart, removeFromCart } from "../../utils/cartFunction";
+import { loadCart, removeFromCart, updateCartQty } from "../../utils/cartFunction";
 import Header from "../../components/navBar";
 import Footer from "../../components/footer";
 import axios from "axios";
@@ -46,20 +46,9 @@ export default function Cart() {
     setCart(updated);
   };
 
-  // ✅ Qty change function
   const handleQtyChange = (productId, action) => {
-    const updated = cart.map((item) => {
-      if (item.productId === productId) {
-        let newQty = item.qty;
-        if (action === "increase") newQty += 1;
-        if (action === "decrease" && newQty > 1) newQty -= 1;
-        return { ...item, qty: newQty };
-      }
-      return item;
-    });
-
+    const updated = updateCartQty(productId, action);
     setCart(updated);
-    localStorage.setItem("cart", JSON.stringify(updated)); // save changes
   };
 
   return (
@@ -205,8 +194,10 @@ export default function Cart() {
             <span className="text-violet-700">LKR {total.toLocaleString()}</span>
           </div>
 
-          <button className="mt-6 w-full bg-violet-700 text-white py-3 rounded-lg font-medium hover:bg-violet-800 transition">
-            Checkout
+          <button
+           onClick={() => navigate("/shipping")}
+           className="mt-6 w-full bg-violet-700 text-white py-3 rounded-lg font-medium hover:bg-violet-800 transition">
+            Proceed to Checkout
           </button>
         </div>
       </main>
