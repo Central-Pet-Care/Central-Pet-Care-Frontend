@@ -1,6 +1,7 @@
 import Sidebar from "../components/Sidebar";
 import AdminHeader from "../components/AdminHeader";
 import { Routes, Route } from "react-router-dom";
+import AdminOrdersPage from "./admin/adminOrdersPage";
 import AdminAdoptionsPage from "./AdminAdoptionsPage";
 
 export default function AdminDashboard() {
@@ -50,6 +51,7 @@ export default function AdminDashboard() {
 
             {/* 🔑 Added route for Adoptions */}
             <Route path="adoptions" element={<AdminAdoptionsPage />} />
+            <Route path= "/orders" element={<AdminOrdersPage/>}/>
           </Routes>
         </main>
       </div>
