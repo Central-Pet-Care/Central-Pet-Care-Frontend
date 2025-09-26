@@ -32,13 +32,54 @@ export default function AddProductForm() {
     images: [],
   });
 
+  const [errors, setErrors] = useState({});
   const [uploading, setUploading] = useState(false);
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.id]: e.target.value });
+  // ✅ Centralized validation
+  const validate = (form) => {
+    let errs = {};
+    const nameRegex = /^[A-Za-z0-9\s]{3,}$/; // product name >=3 chars
+
+    // Product Info
+    if (!form.name.trim()) errs.name = "Product name is required";
+    else if (!nameRegex.test(form.name)) errs.name = "Invalid product name";
+
+    if (!form.categoryId) errs.categoryId = "Category is required";
+    if (!form.description.trim()) errs.description = "Description is required";
+
+    // Pricing & Stock
+    if (!form.price || Number(form.price) <= 0) {
+      errs.price = "Price must be greater than 0";
+    }
+    if (!form.lastPrice && Number(form.lastPrice) <= 0) {
+      errs.lastPrice = "Last price must be greater than 0";
+    }
+    if (!form.stock === "" || Number(form.stock) < 0) {
+      errs.stock = "Stock must be 0 or higher";
+    }
+
+    // Additional details are optional, only validate if entered
+    if (!form.expiryDate) {
+      const today = new Date();
+      const exp = new Date(form.expiryDate);
+      if (exp <= today) errs.expiryDate = "Expiry date must be in the future";
+    }
+    if (!form.weight && Number(form.weight) <= 0) {
+      errs.weight = "Weight must be greater than 0";
+    }
+
+    return errs;
   };
 
-  // ✅ Fixed: Promise.all for multiple image upload
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    const updatedForm = { ...form, [id]: value };
+    setForm(updatedForm);
+
+    const errs = validate(updatedForm);
+    setErrors(errs);
+  };
+
   const handleImageUpload = async (e) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
@@ -65,38 +106,16 @@ export default function AddProductForm() {
     }
   };
 
-  const validateForm = () => {
-    if (!form.name || form.name.length < 3) {
-      toast.error("Product name must be at least 3 characters long.");
-      return false;
-    }
-    if (!form.categoryId) {
-      toast.error("Please select a category.");
-      return false;
-    }
-    if (!form.price || Number(form.price) <= 0) {
-      toast.error("Price must be greater than 0.");
-      return false;
-    }
-    if (form.stock === "" || Number(form.stock) < 0) {
-      toast.error("Stock must be 0 or higher.");
-      return false;
-    }
-    if (form.expiryDate) {
-      const today = new Date();
-      const exp = new Date(form.expiryDate);
-      if (exp <= today) {
-        toast.error("Expiry date must be in the future.");
-        return false;
-      }
-    }
-    return true;
-  };
-
-  // ✅ Fixed: Payload + Bearer token + Redirect
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!validateForm()) return;
+
+    const errs = validate(form);
+    setErrors(errs);
+
+    if (Object.keys(errs).length > 0) {
+      toast.error("Please fix the errors before submitting");
+      return;
+    }
 
     try {
       const payload = {
@@ -149,6 +168,7 @@ export default function AddProductForm() {
         moisture: "",
         images: [],
       });
+      setErrors({});
     } catch (error) {
       console.error(error);
       toast.error("❌ Failed to add product.");
@@ -171,10 +191,10 @@ export default function AddProductForm() {
                   id="name"
                   value={form.name}
                   onChange={handleChange}
-                  required
                   className="w-full border rounded-md px-4 py-2"
                   placeholder="e.g. Dog Food"
                 />
+                {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
               </div>
               <div>
                 <label className="font-medium">Category *</label>
@@ -182,7 +202,6 @@ export default function AddProductForm() {
                   id="categoryId"
                   value={form.categoryId}
                   onChange={handleChange}
-                  required
                   className="w-full border rounded-md px-4 py-2"
                 >
                   <option value="">Select a category</option>
@@ -191,9 +210,10 @@ export default function AddProductForm() {
                   <option value="CAT0003">Pet Medicine</option>
                   <option value="CAT0004">Accessories</option>
                 </select>
+                {errors.categoryId && <p className="text-red-500 text-sm">{errors.categoryId}</p>}
               </div>
               <div className="md:col-span-2">
-                <label className="font-medium">Description</label>
+                <label className="font-medium">Description *</label>
                 <textarea
                   id="description"
                   value={form.description}
@@ -202,6 +222,7 @@ export default function AddProductForm() {
                   className="w-full border rounded-md px-4 py-2"
                   placeholder="A short product description"
                 />
+                {errors.description && <p className="text-red-500 text-sm">{errors.description}</p>}
               </div>
             </div>
           </div>
@@ -217,10 +238,10 @@ export default function AddProductForm() {
                   id="price"
                   value={form.price}
                   onChange={handleChange}
-                  required
                   className="w-full border rounded-md px-4 py-2"
                   placeholder="12.99"
                 />
+                {errors.price && <p className="text-red-500 text-sm">{errors.price}</p>}
               </div>
               <div>
                 <label className="font-medium">Last Price</label>
@@ -232,6 +253,7 @@ export default function AddProductForm() {
                   className="w-full border rounded-md px-4 py-2"
                   placeholder="14.99"
                 />
+                {errors.lastPrice && <p className="text-red-500 text-sm">{errors.lastPrice}</p>}
               </div>
               <div>
                 <label className="font-medium">Stock *</label>
@@ -240,10 +262,10 @@ export default function AddProductForm() {
                   id="stock"
                   value={form.stock}
                   onChange={handleChange}
-                  required
                   className="w-full border rounded-md px-4 py-2"
                   placeholder="100"
                 />
+                {errors.stock && <p className="text-red-500 text-sm">{errors.stock}</p>}
               </div>
               <div>
                 <label className="font-medium">Status</label>
@@ -261,9 +283,9 @@ export default function AddProductForm() {
             </div>
           </div>
 
-          {/* Additional Details */}
+          {/* Additional Details (Optional) */}
           <div className="bg-white p-6 rounded-lg shadow">
-            <h2 className="text-xl font-semibold">Additional Details</h2>
+            <h2 className="text-xl font-semibold">Additional Details (Optional)</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
               <div>
                 <label className="font-medium">Brand</label>
@@ -294,6 +316,7 @@ export default function AddProductForm() {
                   onChange={handleChange}
                   className="w-full border rounded-md px-4 py-2"
                 />
+                {errors.expiryDate && <p className="text-red-500 text-sm">{errors.expiryDate}</p>}
               </div>
               <div>
                 <label className="font-medium">Age Group</label>
@@ -324,7 +347,7 @@ export default function AddProductForm() {
           <div className="flex justify-end gap-4">
             <button
               type="reset"
-              onClick={() =>
+              onClick={() => {
                 setForm({
                   name: "",
                   categoryId: "",
@@ -348,8 +371,9 @@ export default function AddProductForm() {
                   fiber: "",
                   moisture: "",
                   images: [],
-                })
-              }
+                });
+                setErrors({});
+              }}
               className="px-6 py-2 rounded-md bg-gray-200 hover:bg-gray-300"
             >
               Cancel
