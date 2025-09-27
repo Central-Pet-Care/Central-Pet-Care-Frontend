@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import PetCard from "../components/petCard";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Header from "../components/navBar";
 import PetHero from "../components/petHero";
 import AdoptionHighlights from "../components/petHighlights";
 import PetsCategories from "../components/petsCategory";
+import PetFooter from "../components/petFooter";
+
 
 export default function AllPetsPage() {
   const [pets, setPets] = useState([]);
@@ -26,6 +28,9 @@ export default function AllPetsPage() {
     }
     fetchPets();
   }, []);
+
+  const navigate = useNavigate();
+
 
   // 🔎 Filter pets based on search and category (client-side only)
   const filteredPets = pets.filter((pet) => {
@@ -146,6 +151,17 @@ export default function AllPetsPage() {
           </div>
         </div>
 
+       {/* ✅ Add Pet Button (Public Users) */}
+      <div className="flex justify-end mb-6">
+        <button
+          onClick={() => navigate("/add-pet")} // ✅ Go to PublicAddPetPage
+          className="flex items-center gap-2 px-5 py-2 bg-green-600 text-white font-semibold rounded-full shadow-md hover:bg-green-700 hover:shadow-lg transition"
+        >
+          <span className="text-lg">➕</span> Add a Pet
+        </button>
+      </div>
+
+
         {/* 🐾 Pets Section */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {filteredPets.map((pet) => (
@@ -165,6 +181,7 @@ export default function AllPetsPage() {
           <div className="w-24 h-1 bg-purple-300 rounded-full"></div>
         </div>
 
+
         {/* Back Button */}
         <div className="flex justify-center mt-10">
           <Link
@@ -174,6 +191,9 @@ export default function AllPetsPage() {
             ← Go Back
           </Link>
         </div>
+          
+          <PetFooter/>
+
       </div>
     </div>
   );

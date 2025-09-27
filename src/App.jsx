@@ -7,6 +7,7 @@ import HomePage from '../pages/homePage'
 import AllPetsPage from '../pages/allPetsPage'
 import PetDetailsPage from '../pages/petDetailsPage'
 import RegisterPage from '../pages/registerPage'
+import PublicAddPetPage from '../pages/publicAddPetPage'
 
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
           <Route path="/pets" element={<AllPetsPage/>} />
           <Route path="/petInfo/:petId" element={<PetDetailsPage/>} />
           <Route path="/register" element={<RegisterPage/>}/>
+          <Route path="/add-pet" element={<PublicAddPetPage />} /> 
 
       </Routes>
 

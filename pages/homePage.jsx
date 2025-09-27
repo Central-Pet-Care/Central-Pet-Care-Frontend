@@ -6,6 +6,7 @@ import Hero from "../components/hero";
 import AboutSection from "../components/aboutSec";
 import { Toaster } from "react-hot-toast";
 import PetSection from "../components/petSection";
+import AdoptionStats from "../components/adoptionStats";
 
 
 export default function HomePage() {
@@ -32,6 +33,7 @@ export default function HomePage() {
       <Hero />
       <AboutSection />
       <Toaster />
+      <AdoptionStats/>
 
       <PetSection
         title="Pet Adoption Highlights"

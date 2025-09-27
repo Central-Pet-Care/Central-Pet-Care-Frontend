@@ -1,12 +1,12 @@
 import { jsPDF } from "jspdf";
 
-export default function generatePetPDF(pet) {
+export default async function generatePetPDF(pet) {
   const doc = new jsPDF();
 
   // ===== Add Border =====
-  doc.setDrawColor(128, 0, 128); // Purple border
+  doc.setDrawColor(128, 0, 128);
   doc.setLineWidth(2);
-  doc.rect(10, 10, 190, 277); // Page border
+  doc.rect(10, 10, 190, 277);
 
   // ===== Header =====
   doc.setFont("helvetica", "bold");
@@ -24,16 +24,31 @@ export default function generatePetPDF(pet) {
 
   let y = 65;
 
-  // ===== Pet Image =====
+  // ===== Pet Image (Maintain Aspect Ratio) =====
   if (pet.images?.length > 0) {
-    const img = pet.images[0];
-    const imgWidth = 100;
-    const imgHeight = 90;
+    const imgUrl = pet.images[0];
+
+    const img = await new Promise((resolve) => {
+      const image = new Image();
+      image.src = imgUrl;
+      image.onload = () => resolve(image);
+    });
+
+    const maxWidth = 100; // Max allowed width in PDF
+    const maxHeight = 90; // Max allowed height in PDF
+    let { width, height } = img;
+
+    // 🔧 Maintain aspect ratio
+    const scale = Math.min(maxWidth / width, maxHeight / height);
+    width *= scale;
+    height *= scale;
+
+    const x = 105 - width / 2; // Center image
     doc.setDrawColor(150, 80, 200);
     doc.setLineWidth(1);
-    doc.roundedRect(55, y - 5, imgWidth + 10, imgHeight + 10, 5, 5); // rounded image frame
-    doc.addImage(img, "JPEG", 60, y, imgWidth, imgHeight);
-    y += imgHeight + 20;
+    doc.roundedRect(x - 5, y - 5, width + 10, height + 10, 5, 5);
+    doc.addImage(img, "JPEG", x, y, width, height);
+    y += height + 20;
   }
 
   // ===== Pet Information =====
@@ -53,7 +68,7 @@ export default function generatePetPDF(pet) {
   doc.text(`Size: ${pet.size}`, 20, y); y += 8;
   doc.text(`Color: ${pet.color}`, 20, y); y += 8;
   doc.text(`Status: ${pet.adoptionStatus}`, 20, y); y += 8;
-  doc.text(`Price: Rs. ${pet.price}`, 20, y); 
+  doc.text(`Price: Rs. ${pet.price}`, 20, y);
   y += 20;
 
   // ===== Description =====
@@ -69,10 +84,9 @@ export default function generatePetPDF(pet) {
     170
   );
   doc.text(descLines, 20, y);
-  y += descLines.length * 6 + 20; // extra padding
+  y += descLines.length * 6 + 20;
 
-
-  // ===== Page Number (Dynamic) =====
+  // ===== Page Numbers =====
   const totalPages = doc.internal.getNumberOfPages();
   for (let i = 1; i <= totalPages; i++) {
     doc.setPage(i);
