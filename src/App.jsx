@@ -4,6 +4,12 @@ import LoginPage from '../pages/loginPage'
 import { BrowserRouter , Routes, Route } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import HomePage from '../pages/homePage'
+
+import AllPetsPage from '../pages/allPetsPage'
+import PetDetailsPage from '../pages/petDetailsPage'
+import RegisterPage from '../pages/registerPage'
+import PublicAddPetPage from '../pages/publicAddPetPage'
+
 import ProductOverview from '../pages/home/productDetailPage'
 import ProductsPage from '../pages/productsPage'
 import Cart from '../pages/home/cart'
@@ -26,6 +32,12 @@ function App() {
       <Routes path="/*">
           <Route path= "/" element={<HomePage/>}/>
           <Route path= "/login" element={<LoginPage/>}/>
+
+          <Route path="/pets" element={<AllPetsPage/>} />
+          <Route path="/petInfo/:petId" element={<PetDetailsPage/>} />
+          <Route path="/register" element={<RegisterPage/>}/>
+          <Route path="/add-pet" element={<PublicAddPetPage />} /> 
+
           <Route path= "/shop" element={<ProductsPage/>}/>
           <Route path="/product/:productId" element={<ProductOverview/>} />
           <Route path="/cart" element={<Cart />} />
@@ -35,6 +47,7 @@ function App() {
           
 
          
+
 
 
       </Routes>
