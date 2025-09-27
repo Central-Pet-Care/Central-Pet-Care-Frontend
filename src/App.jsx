@@ -13,7 +13,7 @@ import AdoptionForm from '../pages/AdoptionForm'
 
 import AllPetsPage from '../pages/allPetsPage'
 import PetDetailsPage from '../pages/petDetailsPage'
-//import RegisterPage from '../pages/registerPage'
+import RegisterPage from '../pages/registerPage'
 import PublicAddPetPage from '../pages/publicAddPetPage'
 
 import ProductOverview from '../pages/home/productDetailPage'
@@ -51,7 +51,7 @@ function App() {
 
           <Route path="/pets" element={<AllPetsPage/>} />
           <Route path="/petInfo/:petId" element={<PetDetailsPage/>} />
-          {/* <Route path="/register" element={<RegisterPage/>}/> */}
+          <Route path="/register" element={<RegisterPage/>}/>
           <Route path="/add-pet" element={<PublicAddPetPage />} /> 
 
           <Route path= "/shop" element={<ProductsPage/>}/>
