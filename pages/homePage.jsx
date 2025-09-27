@@ -7,17 +7,7 @@ import AdoptionStats from "../components/adoptionStats";
 import Header from '../components/navBar';
 import Hero from '../components/hero';
 import AboutSection from "../components/aboutSec";
-<<<<<<< HEAD
-import Footer from "../components/footer";
-
-
-
-
-=======
 import Servicehome from '../components/servicehome';
-import { Toaster } from "react-hot-toast";
-import Footer from "../components/footer";
->>>>>>> 80c23b4e49f18729b280581aa28538eff9ad48b3
 
 
 export default function HomePage() {
