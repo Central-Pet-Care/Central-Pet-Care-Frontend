@@ -1,12 +1,17 @@
+
 // src/pages/HomePage.jsx
 import { useEffect, useState } from "react";
 import axios from "axios";
-import Header from "../components/navBar";
-import Hero from "../components/hero";
-import AboutSection from "../components/aboutSec";
+
 import { Toaster } from "react-hot-toast";
 import PetSection from "../components/petSection";
 import AdoptionStats from "../components/adoptionStats";
+
+import Header from '../components/navBar';
+import Hero from '../components/hero';
+import AboutSection from "../components/aboutSec";
+import Footer from '../components/footer';
+
 
 
 export default function HomePage() {
@@ -31,7 +36,8 @@ export default function HomePage() {
     <div className="w-full">
       <Header />
       <Hero />
-      <AboutSection />
+
+    
       <Toaster />
       <AdoptionStats/>
 
@@ -42,6 +48,10 @@ export default function HomePage() {
         loading={loading}
         showAllLink={true}
       />
+
+      <AboutSection/>
+      <Footer/>
+
     </div>
   );
 }
