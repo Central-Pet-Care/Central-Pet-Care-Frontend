@@ -1,6 +1,3 @@
-
-
-// src/pages/HomePage.jsx
 import { useEffect, useState } from "react";
 import axios from "axios";
 import PetSection from "../components/petSection";
@@ -8,11 +5,9 @@ import AdoptionStats from "../components/adoptionStats";
 import Header from '../components/navBar';
 import Hero from '../components/hero';
 import AboutSection from "../components/aboutSec";
+import Servicehome from '../components/servicehome';
 import { Toaster } from "react-hot-toast";
 import Footer from "../components/footer";
-
-
-
 
 
 export default function HomePage() {
@@ -54,6 +49,7 @@ export default function HomePage() {
       />
 
       <AboutSection/>
+      <Servicehome></Servicehome>
       <Footer/>
 
       
