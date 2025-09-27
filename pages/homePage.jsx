@@ -1,4 +1,5 @@
 
+
 // src/pages/HomePage.jsx
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -9,12 +10,16 @@ import AdoptionStats from "../components/adoptionStats";
 
 import Header from '../components/navBar';
 import Hero from '../components/hero';
+
 import AboutSection from "../components/aboutSec";
-import Footer from '../components/footer';
+import { Toaster } from "react-hot-toast";
+
+
 
 
 
 export default function HomePage() {
+
   const [pets, setPets] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -32,10 +37,12 @@ export default function HomePage() {
     fetchPets();
   }, []);
 
+
   return (
     <div className="w-full">
       <Header />
       <Hero />
+
 
     
       <Toaster />
@@ -52,6 +59,7 @@ export default function HomePage() {
       <AboutSection/>
       <Footer/>
 
+      
     </div>
   );
 }
