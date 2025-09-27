@@ -13,6 +13,12 @@
     "@supabase/supabase-js": "^2.57.4",
     "@tailwindcss/vite": "^4.1.13",
     "axios": "^1.12.2",
+<<<<<<< HEAD
+=======
+
+
+
+>>>>>>> 1f81255d64fed70cc762c5f5c4d1159e536d1a4f
     "jspdf": "^3.0.3",
     "jspdf-autotable": "^5.0.2",
     "react": "^19.1.1",
