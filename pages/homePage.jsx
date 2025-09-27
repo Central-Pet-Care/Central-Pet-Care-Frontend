@@ -1,17 +1,21 @@
-import Header from '../components/navBar';
-import Hero from '../components/hero';
+// src/pages/HomePage.jsx
+import Header from "../components/navBar";
+import Hero from "../components/hero";
 import AboutSection from "../components/aboutSec";
-import Footer from '../components/footer';
+import { Toaster } from "react-hot-toast";
+
+
 
 export default function HomePage() {
+ 
   return (
-    <div className="h-screen w-full">
-      <Header/>
+    <div className="w-full">
+      <Header />
       <Hero />
-      <AboutSection/>
-      <Footer/>
+      <AboutSection />
+      <Toaster />
 
+      
     </div>
-    
   );
 }
