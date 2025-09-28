@@ -1,7 +1,7 @@
 import Sidebar from "../components/Sidebar";
 import AdminHeader from "../components/AdminHeader";
 import { Routes, Route } from "react-router-dom";
-import AdminAdoptionsPage from "./AdminAdoptionsPage";
+// import AdminAdoptionsPage from "./AdminAdoptionsPage";
 
 export default function AdminDashboard() {
   return (
@@ -49,7 +49,7 @@ export default function AdminDashboard() {
             />
 
             {/* 🔑 Added route for Adoptions */}
-            <Route path="adoptions" element={<AdminAdoptionsPage />} />
+            {/* <Route path="adoptions" element={<AdminAdoptionsPage />} /> */}
           </Routes>
         </main>
       </div>
