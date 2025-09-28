@@ -8,7 +8,6 @@ import Header from '../components/navBar';
 import Hero from '../components/hero';
 import AboutSection from "../components/aboutSec";
 import Servicehome from '../components/servicehome';
-import { Toaster } from "react-hot-toast";
 import Footer from "../components/footer";
 
 
