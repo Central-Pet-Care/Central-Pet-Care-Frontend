@@ -4,6 +4,8 @@ import LoginPage from '../pages/loginPage'
 import { BrowserRouter , Routes, Route } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import HomePage from '../pages/homePage'
+
+
 import ServicePage from '../pages/servicesPage'
 import ServiceDetails from '../pages/serviceDetails'
 import BookingPage from '../pages/bookingPage'
@@ -33,6 +35,8 @@ function App() {
       <Routes path="/*">
           <Route path= "/" element={<HomePage/>}/>
           <Route path= "/login" element={<LoginPage/>}/>
+
+
           <Route path="/services" element={<ServicePage/>} />
           <Route path="/services/:id" element={<ServiceDetails/>} />
           <Route path="/service/:id" element={<ServiceDetails/>} />
@@ -53,6 +57,7 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/shipping" element={<ShippingScreen />} />
           <Route path="/order/:orderId" element={<OrderSummary />} />
+
 
 
 
