@@ -9,7 +9,6 @@ import ServiceDetails from '../pages/serviceDetails'
 import BookingPage from '../pages/bookingPage'
 import MyBookings from '../pages/myBookings'
 import MyAdoptionsPage from '../pages/MyAdoptionsPage'
-import AdminDashboard from '../pages/AdminDashboard'
 import AdoptionForm from '../pages/AdoptionForm'
 import AdoptionDetailsPage from '../pages/AdoptionDetailsPage'
 import AllPetsPage from '../pages/allPetsPage'
@@ -21,6 +20,7 @@ import ProductsPage from '../pages/productsPage'
 import Cart from '../pages/home/cart'
 import ShippingScreen from '../pages/home/shipping'
 import OrderSummary from '../pages/home/orderSummary'
+import AdminDashboard from '../pages/AdminDashboard'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -53,6 +53,7 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/shipping" element={<ShippingScreen />} />
           <Route path="/order/:orderId" element={<OrderSummary />} />
+
 
 
 
