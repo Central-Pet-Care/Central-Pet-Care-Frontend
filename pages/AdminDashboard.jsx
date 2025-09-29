@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Sidebar from "../components/Sidebar";
 import AdminHeader from "../components/AdminHeader";
-import AdminOrdersPage from "./admin/adminOrdersPage";
 import AdminServicesPage from "./admin/AdminServicesPage";
 import EditServicePage from "./admin/EditServicePage";
 import AddServicePage from "./admin/AddServicePage";
@@ -20,6 +19,9 @@ import {
 } from "react-icons/fa";
 import AdminAdoptionsPage from "./admin/AdminAdoptionsPage";
 import AdminAdoptionViewPage from "./admin/AdminAdoptionViewPage";
+import AdminOrdersPage from "./admin/adminOrdersPage";
+import { Route, Routes } from "react-router-dom";
+
 
 export default function AdminDashboard() {
   const [productCount, setProductCount] = useState(0);
@@ -137,6 +139,7 @@ export default function AdminDashboard() {
              <Route path="services/edit/:id" element={<EditServicePage />} />
              <Route path="services/add" element={<AddServicePage />} />
              <Route path="bookings" element={<AdminBookingsPage />} />
+             <Route path= "/orders" element={<AdminOrdersPage/>}/>
             
           </Routes>
         </main>
