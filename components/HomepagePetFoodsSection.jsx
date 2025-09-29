@@ -27,15 +27,18 @@ export default function HomepagePetFoodsSection() {
   }, [loadingStatus]);
 
   return (
-    <section className="w-full py-12 bg-gradient-to-b from-white to-purple-50">
+    <section className="w-full py-12 bg-purple-50">
       <div className="container mx-auto px-4">
         {/* Section Header */}
-        <div className="text-center mb-8">
-          <h2 className="text-3xl font-extrabold text-purple-900">
-            Featured Pet Foods
-          </h2>
-          <div className="w-16 h-1 bg-pink-500 mx-auto mt-3 mb-10 rounded-full"></div>
-        </div>
+       <div className="text-center mb-12">
+  <h2 className="text-3xl md:text-4xl font-extrabold text-purple-800">
+     Featured Pet Foods
+  </h2>
+  <p className="text-gray-600 mt-3 text-base md:text-lg">
+    Nutritious & tasty meals your pets will love 🐾
+  </p>
+  <div className="w-20 h-1 bg-pink-500 mx-auto mt-4 rounded-full"></div>
+</div>
 
         {/* Products */}
         {loadingStatus === "loading" && (

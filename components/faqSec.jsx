@@ -32,7 +32,7 @@ export default function FAQSection() {
   };
 
   return (
-    <section className="w-full py-12 bg-gradient-to-b from-white to-purple-50">
+    <section className="w-full py-12 bg-purple-50">
       <div className="max-w-4xl mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-8">

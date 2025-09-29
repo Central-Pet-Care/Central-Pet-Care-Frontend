@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Toaster } from "react-hot-toast";
 import PetSection from "../components/petSection";
-import AdoptionStats from "../components/adoptionStats";
 import Header from '../components/navBar';
 import Hero from '../components/hero';
 import AboutSection from "../components/aboutSec";
@@ -44,30 +43,26 @@ export default function HomePage() {
     <div className="w-full">
       <Header />
       <Hero />
-
-
-    
       <Toaster />
-      <AdoptionStats/>
-
+      
+      <AboutSection/>
+      <CategoriesSection/>
+      <StatsSection/>
       <PetSection
         title="Pet Adoption Highlights"
         subtitle="Meet some of our lovely pets waiting for a forever home."
-        pets={pets.slice(0, 5)} 
+        pets={pets.slice(0, 4)} 
         loading={loading}
         showAllLink={true}
       />
+      <Servicehome/>
 
-      <AboutSection/>
-
-      <CategoriesSection/>
-      <StatsSection/>
+    
       <HomepagePetFoodsSection/>
       <GallerySection/>
       <FAQSection/>
       <WhyChooseUs/>
 
-      <Servicehome></Servicehome>
 
       <Footer/>
 

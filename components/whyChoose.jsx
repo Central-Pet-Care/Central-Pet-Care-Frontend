@@ -28,15 +28,16 @@ export default function WhyChooseUs() {
     <section className="w-full py-16 bg-white">
       <div className="max-w-6xl mx-auto px-6">
         {/* Section Header */}
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-purple-700">
-            Why Choose Us
-          </h2>
-          <p className="text-gray-600 mt-2 text-sm md:text-base">
-            Trusted by the community for quality, care, and compassion.
-          </p>
-          <div className="w-20 h-1 bg-pink-500 mx-auto mt-4 rounded-full"></div>
-        </div>
+       <div className="text-center mb-12">
+  <h2 className="text-3xl md:text-4xl font-extrabold text-purple-800">
+    Why Choose Us
+  </h2>
+  <p className="text-gray-600 mt-3 text-base md:text-lg">
+    Trusted by the community for quality, care, and compassion.
+  </p>
+  <div className="w-20 h-1 bg-pink-500 mx-auto mt-4 rounded-full"></div>
+</div>
+
 
         {/* Features */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
