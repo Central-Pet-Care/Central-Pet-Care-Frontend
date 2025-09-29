@@ -7,8 +7,17 @@ import AdoptionStats from "../components/adoptionStats";
 import Header from '../components/navBar';
 import Hero from '../components/hero';
 import AboutSection from "../components/aboutSec";
+
+import HomepagePetFoodsSection from '../components/HomepagePetFoodsSection';
+import CategoriesSection from '../components/homeCategorySection';
+import StatsSection from '../components/statSec';
+import FAQSection from '../components/faqSec';
+import WhyChooseUs from '../components/whyChoose';
+import GallerySection from '../components/gallery';
+
 import Servicehome from '../components/servicehome';
 import Footer from "../components/footer";
+
 
 
 export default function HomePage() {
@@ -50,7 +59,16 @@ export default function HomePage() {
       />
 
       <AboutSection/>
+
+      <CategoriesSection/>
+      <StatsSection/>
+      <HomepagePetFoodsSection/>
+      <GallerySection/>
+      <FAQSection/>
+      <WhyChooseUs/>
+
       <Servicehome></Servicehome>
+
       <Footer/>
 
       
