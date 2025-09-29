@@ -20,11 +20,28 @@ export default function LoginPage() {
         }
         toast.success("Login Success");
         localStorage.setItem("token", res.data.token);
-        if (res.data.user.type === "admin") {
+        localStorage.setItem("user", JSON.stringify(res.data.user));
+        
+        // ✅ Get redirect param
+        const params = new URLSearchParams(window.location.search);
+        const redirect = params.get("redirect");
+
+        if (redirect) {
+          if (res.data.user.type === "customer") {
+            window.location.href = redirect; // ✅ Only customers can adopt
+          } else {
+            toast.error("Only customers can adopt a pet.");
+            window.location.href = "/"; // redirect them home
+          }
+        } else if (res.data.user.type === "admin") {
           window.location.href = "/admin";
         } else {
           window.location.href = "/";
         }
+      })
+      .catch((err) => {
+        console.error(err);
+        toast.error("Login failed. Please try again.");
       });
   }
 
