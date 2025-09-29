@@ -12,7 +12,6 @@ import MyAdoptionsPage from '../pages/MyAdoptionsPage'
 import AdminDashboard from '../pages/AdminDashboard'
 import AdoptionForm from '../pages/AdoptionForm'
 import AdoptionDetailsPage from '../pages/AdoptionDetailsPage'
-import AdminAdoptionViewPage from '../pages/AdminAdoptionViewPage'
 import AllPetsPage from '../pages/allPetsPage'
 import PetDetailsPage from '../pages/petDetailsPage'
 import RegisterPage from '../pages/registerPage'
@@ -22,12 +21,6 @@ import ProductsPage from '../pages/productsPage'
 import Cart from '../pages/home/cart'
 import ShippingScreen from '../pages/home/shipping'
 import OrderSummary from '../pages/home/orderSummary'
-
-
-
-
-
-
 
 function App() {
   const [count, setCount] = useState(0)
@@ -47,12 +40,11 @@ function App() {
           <Route path="/booking/:id" element={<BookingPage />} />
           <Route path="/my-bookings" element={<MyBookings />} />
           <Route path="/adoptions" element={<MyAdoptionsPage />} />
-          <Route path="/adoptions/:adoptionId" element={<AdoptionDetailsPage />
+          <Route path="/adoptions/:adoptionId" element={<AdoptionDetailsPage />}/>
           <Route path="/adopt/:petId" element={<AdoptionForm />} />
           <Route path="/adopt/:petId/edit" element={<AdoptionForm isEdit={true} />} />         
-          <Route path="/admin/adoptions/pet/:petId" element={<AdminAdoptionViewPage />
           <Route path="/admin/*" element={<AdminDashboard />} />
-          <Route path="/pets" element={<AllPetsPage/>} />
+          <Route path="/pets" element={<AllPetsPage />} />
           <Route path="/petInfo/:petId" element={<PetDetailsPage/>} />
           <Route path="/register" element={<RegisterPage/>}/>
           <Route path="/add-pet" element={<PublicAddPetPage />} /> 

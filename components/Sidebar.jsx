@@ -23,7 +23,7 @@ export default function Sidebar() {
   };
 
   const menuItems = [
-    { to: "/admin", icon: <FaTachometerAlt />, label: "Dashboard" },
+    { to: "/admin/*", icon: <FaTachometerAlt />, label: "Dashboard" },
     { to: "/admin/pets", icon: <FaPaw />, label: "Pets" },
     { to: "/admin/services", icon: <FaServicestack />, label: "Services" },
     { to: "/admin/bookings", icon: <FaCalendarCheck />, label: "Bookings" },

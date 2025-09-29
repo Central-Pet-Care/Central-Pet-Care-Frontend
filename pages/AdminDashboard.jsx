@@ -10,7 +10,9 @@ import {
   FaBoxOpen, FaClipboardList, FaPaw, 
   FaDollarSign, FaBook, FaHome, FaShoppingCart 
 } from "react-icons/fa";
- import AdminAdoptionsPage from "./AdminAdoptionsPage";
+import AdminAdoptionsPage from "./admin/AdminAdoptionsPage";
+import AdminAdoptionViewPage from "./admin/AdminAdoptionViewPage";
+
 
 
 export default function AdminDashboard() {
@@ -69,7 +71,7 @@ export default function AdminDashboard() {
         <main className="flex-1 p-8 animate-fadeIn">
           <Routes>
             <Route
-              path="/"
+              path="/*"
               element={
                 <>
                   <h1 className="text-3xl font-bold text-gray-800">Dashboard</h1>
@@ -96,9 +98,9 @@ export default function AdminDashboard() {
             <Route path="products" element={<AdminProductsPage />} />
             <Route path="/products/addProduct" element={<AddProductForm />} />
             <Route path="/products/editProduct/:productId" element={<EditProductForm />} />
-
-      
-             <Route path="adoptions" element={<AdminAdoptionsPage />} /> 
+            <Route path="adoptions" element={<AdminAdoptionsPage />} /> 
+            <Route path="/adoptions/pet/:petId" element={<AdminAdoptionViewPage />} /> 
+            
 
           </Routes>
         </main>
