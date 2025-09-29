@@ -1,7 +1,10 @@
 import Sidebar from "../components/Sidebar";
 import AdminHeader from "../components/AdminHeader";
 import { Routes, Route } from "react-router-dom";
-import AdminAdoptionsPage from "./AdminAdoptionsPage";
+// import AdminAdoptionsPage from "./AdminAdoptionsPage";
+import PaymentAdminDashboard from "./admin/PaymentAdminDashboard"; //payment admin dashboard
+import PaymentView from "./admin/PaymentView";
+
 
 export default function AdminDashboard() {
   return (
@@ -49,7 +52,9 @@ export default function AdminDashboard() {
             />
 
             {/* 🔑 Added route for Adoptions */}
-            <Route path="adoptions" element={<AdminAdoptionsPage />} />
+            {/* <Route path="adoptions" element={<AdminAdoptionsPage />} /> */}
+            <Route path="payments" element={<PaymentAdminDashboard />} />
+            <Route path="payment-view" element={<PaymentView />} />
           </Routes>
         </main>
       </div>
