@@ -29,6 +29,7 @@ import OrderSummary from '../pages/home/orderSummary'
 
 
 
+
 function App() {
   const [count, setCount] = useState(0)
 
@@ -61,6 +62,7 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/shipping" element={<ShippingScreen />} />
           <Route path="/order/:orderId" element={<OrderSummary />} />
+
 
 
       </Routes>
