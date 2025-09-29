@@ -110,7 +110,7 @@ export default function AdminDashboard() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
                     <StatCard title="Products in Stock" value={productCount} subtext="Available now" color="from-purple-500 to-purple-700" icon={FaBoxOpen} />
                     <StatCard title="Active Services" value="45" subtext="Running services" color="from-blue-500 to-blue-700" icon={FaClipboardList} />
-                    <StatCard title="Total Pets" value="120" subtext="All categories" color="from-pink-500 to-pink-600" icon={FaPaw} />
+                    <StatCard title="Total Pets" value={petCount} subtext="All categories" color="from-pink-500 to-pink-600" icon={FaPaw} />
                     <StatCard title="Recent Payments" value="$5,500" subtext="This month" color="from-green-500 to-green-700" icon={FaDollarSign} />
                     <StatCard title="Bookings" value="78" subtext="This week" color="from-indigo-500 to-indigo-700" icon={FaBook} />
                     <StatCard title="Adoptions" value="34" subtext="Successful adoptions" color="from-orange-500 to-orange-600" icon={FaHome} />

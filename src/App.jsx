@@ -22,16 +22,6 @@ import Cart from '../pages/home/cart'
 import ShippingScreen from '../pages/home/shipping'
 import OrderSummary from '../pages/home/orderSummary'
 
-<<<<<<< HEAD
-=======
-
-
-
-
-
-
-
->>>>>>> 3b366d74a1efd4620ceb644effd2ea258c1c63c7
 function App() {
   const [count, setCount] = useState(0)
 
