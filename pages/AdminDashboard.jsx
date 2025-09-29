@@ -3,6 +3,10 @@ import axios from "axios";
 import Sidebar from "../components/Sidebar";
 import AdminHeader from "../components/AdminHeader";
 import { Routes, Route } from "react-router-dom";
+import AdminServicesPage from "./admin/AdminServicesPage";
+import EditServicePage from "./admin/EditServicePage";
+import AddServicePage from "./admin/AddServicePage";
+import AdminBookingsPage from "./admin/AdminBookingsPage";
 import AdminPetsPage from "./admin/adminPetPage";
 import AddPetPage from "./admin/addPetPage";
 import HealthRecordsPage from "./admin/healthRecordsPage";
@@ -82,7 +86,6 @@ export default function AdminDashboard() {
     </div>
   );
 
-
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-br from-purple-200 via-blue-100 to-white">
       {/* Top Header */}
@@ -106,6 +109,7 @@ export default function AdminDashboard() {
 
                   {/* Summary Cards */}
 
+
                
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
                     <StatCard title="Products in Stock" value={productCount} subtext="Available now" color="from-purple-500 to-purple-700" icon={FaBoxOpen} />
@@ -122,6 +126,7 @@ export default function AdminDashboard() {
             />
 
 
+
             <Route path="/pets" element={<AdminPetsPage />} />
             <Route path="/pets/addPet" element={<AddPetPage />} />
             <Route path="/pets/medicalRecords" element={<HealthRecordsPage />} />
@@ -135,6 +140,7 @@ export default function AdminDashboard() {
             <Route path="adoptions" element={<AdminAdoptionsPage />} /> 
             <Route path="/adoptions/pet/:petId" element={<AdminAdoptionViewPage />} /> 
             
+
 
 
           </Routes>
