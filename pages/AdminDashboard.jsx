@@ -6,12 +6,12 @@ import { Routes, Route } from "react-router-dom";
 import AdminProductsPage from "./admin/adminProductPage";
 import AddProductForm from "./admin/addProductForm";
 import EditProductForm from "./admin/editProductForm";
-
-// ✅ Icons
 import { 
   FaBoxOpen, FaClipboardList, FaPaw, 
   FaDollarSign, FaBook, FaHome, FaShoppingCart 
 } from "react-icons/fa";
+ import AdminAdoptionsPage from "./AdminAdoptionsPage";
+
 
 export default function AdminDashboard() {
   const [productCount, setProductCount] = useState(0);
@@ -91,10 +91,15 @@ export default function AdminDashboard() {
               }
             />
 
+
             {/* Routes */}
             <Route path="products" element={<AdminProductsPage />} />
             <Route path="/products/addProduct" element={<AddProductForm />} />
             <Route path="/products/editProduct/:productId" element={<EditProductForm />} />
+
+      
+             <Route path="adoptions" element={<AdminAdoptionsPage />} /> 
+
           </Routes>
         </main>
       </div>
