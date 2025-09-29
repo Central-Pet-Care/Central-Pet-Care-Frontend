@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Sidebar from "../components/Sidebar";
 import AdminHeader from "../components/AdminHeader";
-import { Routes, Route } from "react-router-dom";
+import AdminOrdersPage from "./admin/adminOrdersPage";
 import AdminServicesPage from "./admin/AdminServicesPage";
 import EditServicePage from "./admin/EditServicePage";
 import AddServicePage from "./admin/AddServicePage";
@@ -20,7 +20,6 @@ import {
 } from "react-icons/fa";
 import AdminAdoptionsPage from "./admin/AdminAdoptionsPage";
 import AdminAdoptionViewPage from "./admin/AdminAdoptionViewPage";
-
 
 export default function AdminDashboard() {
   const [productCount, setProductCount] = useState(0);
@@ -125,15 +124,10 @@ export default function AdminDashboard() {
               }
             />
 
-
-
             <Route path="/pets" element={<AdminPetsPage />} />
             <Route path="/pets/addPet" element={<AddPetPage />} />
             <Route path="/pets/medicalRecords" element={<HealthRecordsPage />} />
             <Route path="/pets/editPet" element={<UpdatePetPage />} />
-
-
-            {/* Routes */}
             <Route path="products" element={<AdminProductsPage />} />
             <Route path="/products/addProduct" element={<AddProductForm />} />
             <Route path="/products/editProduct/:productId" element={<EditProductForm />} />
@@ -144,9 +138,6 @@ export default function AdminDashboard() {
              <Route path="services/add" element={<AddServicePage />} />
              <Route path="bookings" element={<AdminBookingsPage />} />
             
-
-
-
           </Routes>
         </main>
       </div>

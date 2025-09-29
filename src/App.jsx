@@ -4,6 +4,7 @@ import LoginPage from '../pages/loginPage'
 import { BrowserRouter , Routes, Route } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import HomePage from '../pages/homePage'
+import AdminDashboard from '../pages/AdminDashboard'
 
 
 import ServicePage from '../pages/servicesPage'
@@ -35,8 +36,6 @@ function App() {
       <Routes path="/*">
           <Route path= "/" element={<HomePage/>}/>
           <Route path= "/login" element={<LoginPage/>}/>
-
-
           <Route path="/services" element={<ServicePage/>} />
           <Route path="/services/:id" element={<ServiceDetails/>} />
           <Route path="/service/:id" element={<ServiceDetails/>} />
