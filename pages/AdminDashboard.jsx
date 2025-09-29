@@ -139,6 +139,10 @@ export default function AdminDashboard() {
             <Route path="/products/editProduct/:productId" element={<EditProductForm />} />
             <Route path="adoptions" element={<AdminAdoptionsPage />} /> 
             <Route path="/adoptions/pet/:petId" element={<AdminAdoptionViewPage />} /> 
+             <Route path="services" element={<AdminServicesPage />} />
+             <Route path="services/edit/:id" element={<EditServicePage />} />
+             <Route path="services/add" element={<AddServicePage />} />
+             <Route path="bookings" element={<AdminBookingsPage />} />
             
 
 
