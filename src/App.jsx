@@ -21,10 +21,11 @@ import Cart from '../pages/home/cart'
 import ShippingScreen from '../pages/home/shipping'
 import OrderSummary from '../pages/home/orderSummary'
 import AdminDashboard from '../pages/AdminDashboard'
+import PaymentPage from '../pages/PaymentPage.jsx';
+import PayConfo from '../pages/PayConfo.jsx';
+import ShippingData from '../pages/shipingData.jsx';
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <>
       <BrowserRouter>
@@ -53,10 +54,9 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/shipping" element={<ShippingScreen />} />
           <Route path="/order/:orderId" element={<OrderSummary />} />
-
-
-
-
+          <Route path="/payment" element={<PaymentPage />} />
+          <Route path="/PayConfo" element={<PayConfo />} />
+          <Route path="/shipping" element={<ShippingData />} />
       </Routes>
 
       </BrowserRouter>
