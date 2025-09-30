@@ -94,11 +94,15 @@ export default function ProductOverview() {
                 </p>
 
                 {/* Stock Status */}
-                <p className="text-sm text-gray-500">
-                  {product.stock > 0
-                    ? `${product.stock} available`
-                    : "Out of Stock"}
-                </p>
+                {product.stock > 0 ? (
+                  <p className="text-sm font-medium text-green-600">
+                    ✅ {product.stock} in stock
+                  </p>
+                ) : (
+                  <p className="text-sm font-bold text-red-600">
+                    ❌ Out of Stock
+                  </p>
+                )}
 
                 {/* Quantity Selector */}
                 <div className="flex items-center gap-4">
@@ -126,8 +130,8 @@ export default function ProductOverview() {
                   </div>
                 </div>
 
-                {/* Add to Cart */}
                 {/* Add to Cart & Buy Now Buttons */}
+<<<<<<< HEAD
              {/* Add to Cart & Buy Now Buttons */}
 <div className="flex gap-4 mt-4">
   {/* 🛒 Add to Cart */}
@@ -178,6 +182,34 @@ export default function ProductOverview() {
   </button>
 </div>
 
+=======
+                <div className="flex gap-4 mt-4">
+                  <button
+                    onClick={handleAddToCart}
+                    disabled={product.stock <= 0}
+                    className="px-6 py-3 bg-violet-400 hover:bg-violet-700 text-white font-medium rounded-lg shadow-sm transition-all duration-200 disabled:opacity-50"
+                  >
+                    🛒 Add to Cart
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      if (product.stock > 0) {
+                        addToCart(product.productId, quantity);
+                        navigate("/shipping", {
+                          state: { productId: product.productId, quantity },
+                        });
+                      } else {
+                        toast.error("This product is out of stock.");
+                      }
+                    }}
+                    disabled={product.stock <= 0}
+                    className="px-6 py-3 bg-pink-400 hover:bg-pink-700 text-white font-medium rounded-lg shadow-sm transition-all duration-200 disabled:opacity-50"
+                  >
+                    ⚡ Buy It Now
+                  </button>
+                </div>
+>>>>>>> 25ad5b9ab760de202a2f82f740902ad155f8c337
 
                 {/* 📑 Tabs */}
                 <div className="mt-8">
@@ -257,9 +289,9 @@ export default function ProductOverview() {
           )}
         </div>
       </div>
-      <RecommendedProducts/>
-      <ShippingInfo/>
-      <Footer/>
+      <RecommendedProducts />
+      <ShippingInfo />
+      <Footer />
     </>
   );
 }
