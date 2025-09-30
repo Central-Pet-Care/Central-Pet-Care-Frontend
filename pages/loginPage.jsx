@@ -23,22 +23,13 @@ export default function LoginPage() {
         // ✅ Save token + user
         localStorage.setItem("token", res.data.token);
         localStorage.setItem("user", JSON.stringify(res.data.user));
-<<<<<<< HEAD
-
-=======
-        
->>>>>>> 25ad5b9ab760de202a2f82f740902ad155f8c337
         // ✅ Get redirect param
         const params = new URLSearchParams(window.location.search);
         const redirect = params.get("redirect");
 
         if (redirect) {
           if (res.data.user.type === "customer") {
-<<<<<<< HEAD
             window.location.href = redirect; // ✅ Only customers can adopt / buy
-=======
-            window.location.href = redirect; // ✅ Only customers can adopt
->>>>>>> 25ad5b9ab760de202a2f82f740902ad155f8c337
           } else {
             toast.error("Only customers can adopt a pet.");
             window.location.href = "/"; // redirect them home
