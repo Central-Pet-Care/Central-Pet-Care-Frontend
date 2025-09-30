@@ -19,12 +19,31 @@ export default function LoginPage() {
           return;
         }
         toast.success("Login Success");
+
+        // ✅ Save token + user
         localStorage.setItem("token", res.data.token);
-        if (res.data.user.type === "admin") {
+        localStorage.setItem("user", JSON.stringify(res.data.user));
+
+        // ✅ Get redirect param
+        const params = new URLSearchParams(window.location.search);
+        const redirect = params.get("redirect");
+
+        if (redirect) {
+          if (res.data.user.type === "customer") {
+            window.location.href = redirect; // ✅ Only customers can adopt / buy
+          } else {
+            toast.error("Only customers can adopt a pet.");
+            window.location.href = "/"; // redirect them home
+          }
+        } else if (res.data.user.type === "admin") {
           window.location.href = "/admin";
         } else {
           window.location.href = "/";
         }
+      })
+      .catch((err) => {
+        console.error(err);
+        toast.error("Login failed. Please try again.");
       });
   }
 
@@ -87,23 +106,17 @@ export default function LoginPage() {
             </p>
           </div>
 
-           {/* Right Section - Image with smaller bottom overlay */}
+          {/* Right Section - Image with smaller bottom overlay */}
           <div className="relative bg-gradient-to-br from-blue-100 via-blue-200 to-blue-100 flex justify-center items-center p-6">
-           {/* Bigger Puppy Image */}
-  <img
-    src="https://fhuoudyottvtaawdswlz.supabase.co/storage/v1/object/public/images/dog01.jpg"
-    alt="Puppy"
-    className="max-h-[500px] object-contain drop-shadow-lg"
-  />
-
-  </div>
-</div>
-
-
-       
-
+            {/* Bigger Puppy Image */}
+            <img
+              src="https://fhuoudyottvtaawdswlz.supabase.co/storage/v1/object/public/images/dog01.jpg"
+              alt="Puppy"
+              className="max-h-[500px] object-contain drop-shadow-lg"
+            />
+          </div>
         </div>
       </div>
-    
+    </div>
   );
 }

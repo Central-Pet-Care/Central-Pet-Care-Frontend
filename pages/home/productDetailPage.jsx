@@ -128,31 +128,56 @@ export default function ProductOverview() {
 
                 {/* Add to Cart */}
                 {/* Add to Cart & Buy Now Buttons */}
-              <div className="flex gap-4 mt-4">
-               <button
-                 onClick={handleAddToCart}
-                 disabled={product.stock <= 0}
-                 className="px-6 py-3 bg-violet-400 hover:bg-violet-700 text-white font-medium rounded-lg shadow-sm transition-all duration-200 disabled:opacity-50"
-                >
-                  🛒 Add to Cart
-               </button>
+             {/* Add to Cart & Buy Now Buttons */}
+<div className="flex gap-4 mt-4">
+  {/* 🛒 Add to Cart */}
+  <button
+    onClick={() => {
+      const token = localStorage.getItem("token");
+      const user = JSON.parse(localStorage.getItem("user"));
 
-              <button
-                 onClick={() => {
-                 if (product.stock > 0) {
-                     navigate("/checkout", {
-                     state: { productId: product.productId, quantity },
-                    });
-               } else {
-                  toast.error("This product is out of stock.");
-                }
-              }}
-                 disabled={product.stock <= 0}
-                 className="px-6 py-3 bg-pink-400 hover:bg-pink-700 text-white font-medium rounded-lg shadow-sm transition-all duration-200 disabled:opacity-50"
-              >
-                 ⚡ Buy It Now
-              </button>
-             </div>
+      if (!token) {
+        // redirect to login with redirect param
+        navigate(`/login?redirect=/product/${product.productId}`);
+      } else if (user?.type !== "customer") {
+        toast.error("Only customers can purchase products!");
+      } else {
+        handleAddToCart();
+      }
+    }}
+    disabled={product.stock <= 0}
+    className="px-6 py-3 bg-violet-400 hover:bg-violet-700 text-white font-medium rounded-lg shadow-sm transition-all duration-200 disabled:opacity-50"
+  >
+    🛒 Add to Cart
+  </button>
+
+  {/* ⚡ Buy It Now */}
+  <button
+    onClick={() => {
+      const token = localStorage.getItem("token");
+      const user = JSON.parse(localStorage.getItem("user"));
+
+      if (!token) {
+        navigate(`/login?redirect=/product/${product.productId}`);
+      } else if (user?.type !== "customer") {
+        toast.error("Only customers can purchase products!");
+      } else {
+        if (product.stock > 0) {
+          navigate("/checkout", {
+            state: { productId: product.productId, quantity },
+          });
+        } else {
+          toast.error("This product is out of stock.");
+        }
+      }
+    }}
+    disabled={product.stock <= 0}
+    className="px-6 py-3 bg-pink-400 hover:bg-pink-700 text-white font-medium rounded-lg shadow-sm transition-all duration-200 disabled:opacity-50"
+  >
+    ⚡ Buy It Now
+  </button>
+</div>
+
 
                 {/* 📑 Tabs */}
                 <div className="mt-8">
