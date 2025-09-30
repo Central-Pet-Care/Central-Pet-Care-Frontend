@@ -1,209 +1,208 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
 
 const PayConfo = () => {
-  const [paymentData, setPaymentData] = useState(null);
+  const [paymentResult, setPaymentResult] = useState(null);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
 
   useEffect(() => {
-    // Check for URL parameters (from PayHere redirect)
-    const urlParams = new URLSearchParams(window.location.search);
-    const success = urlParams.get('success');
-    const orderId = urlParams.get('orderId');
-
-    if (success !== null && orderId) {
-      // Payment returned from PayHere
-      if (success === 'true') {
-        // Success - get pending payment data
-        const pendingPayment = localStorage.getItem("pendingPayment");
-        if (pendingPayment) {
-          const paymentInfo = JSON.parse(pendingPayment);
-          setPaymentData({
-            success: true,
-            orderId: orderId,
-            amount: paymentInfo.amount,
-            currency: paymentInfo.currency,
-            method: paymentInfo.method,
-            status: 'completed',
-            message: 'Payment completed successfully via PayHere',
-            customerInfo: paymentInfo.customerInfo,
-            items: paymentInfo.items
-          });
-          localStorage.removeItem("pendingPayment");
-        }
-      } else {
-        // Failed
-        setPaymentData({
+    const result = localStorage.getItem("paymentSuccess");
+    
+    if (result) {
+      try {
+        const parsedResult = JSON.parse(result);
+        setPaymentResult(parsedResult);
+      } catch (error) {
+        setPaymentResult({
           success: false,
-          orderId: orderId,
-          amount: 0,
-          currency: 'LKR',
-          method: 'payhere',
-          status: 'failed',
-          message: 'Payment was cancelled or failed',
-          error: 'Payment was cancelled by user or payment gateway'
+          message: "Error loading payment result"
         });
       }
     } else {
-      // Check localStorage for payment data (from direct processing)
-      const paymentResult = localStorage.getItem("paymentSuccess");
-      
-      if (paymentResult) {
-        try {
-          const parsedData = JSON.parse(paymentResult);
-          setPaymentData(parsedData);
-          console.log("Payment confirmation data:", parsedData);
-        } catch (error) {
-          console.error("Error parsing payment data:", error);
-          navigate('/payment');
-          return;
-        }
-      } else {
-        console.log("No payment data found, redirecting to payment");
-        navigate('/payment');
-        return;
-      }
+      setPaymentResult({
+        success: false,
+        message: "No payment data found"
+      });
     }
     
     setLoading(false);
-  }, [navigate]);
+  }, []);
 
-  const handleContinueShopping = () => {
+  const handleBackToShop = () => {
     localStorage.removeItem("paymentSuccess");
-    navigate('/');
+    window.location.href = '/';
+  };
+
+  const handleTryAgain = () => {
+    if (paymentResult?.orderId) {
+      window.location.href = `/payment?orderId=${paymentResult.orderId}`;
+    } else {
+      window.location.href = '/';
+    }
   };
 
   if (loading) {
     return (
       <div className="min-h-screen bg-purple-100 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-700 mx-auto mb-4"></div>
-          <p className="text-lg text-purple-700">Loading payment confirmation...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
+          <p className="text-purple-800">Loading...</p>
         </div>
       </div>
     );
   }
 
-  if (!paymentData) {
+  if (!paymentResult || !paymentResult.success) {
     return (
-      <div className="min-h-screen bg-purple-100 flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-red-600 mb-4">No Payment Data Found</h2>
-          <p className="text-gray-600 mb-4">Unable to load payment confirmation</p>
-          <button 
-            onClick={() => navigate('/payment')}
-            className="px-6 py-2 bg-purple-700 text-white rounded-lg hover:bg-purple-800"
-          >
-            Back to Payment
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="min-h-screen bg-purple-100 py-10">
-      <div className="max-w-4xl mx-auto px-4">
-        
-        {/* Success/Error Header */}
-        <div className="bg-white rounded-xl shadow-lg p-8 mb-6">
-          <div className="text-center">
-            {paymentData.success ? (
-              <>
-                <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <svg className="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                  </svg>
-                </div>
-                <h1 className="text-3xl font-bold text-green-600 mb-2">Payment Successful! ✅</h1>
-                <p className="text-gray-600 mb-4">{paymentData.message}</p>
-                <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
-                  <div className="flex justify-between items-center">
-                    <span className="font-medium text-green-800">Status:</span>
-                    <span className="font-bold text-green-700">
-                      {paymentData.status === 'completed' ? '✅ Completed' : paymentData.status}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center mt-2">
-                    <span className="font-medium text-green-800">Order ID:</span>
-                    <span className="font-mono text-green-700">{paymentData.orderId}</span>
-                  </div>
-                  <div className="flex justify-between items-center mt-2">
-                    <span className="font-medium text-green-800">Amount:</span>
-                    <span className="font-bold text-green-700">LKR {paymentData.amount?.toFixed(2) || '0.00'}</span>
-                  </div>
-                  {paymentData.paymentId && (
-                    <div className="flex justify-between items-center mt-2">
-                      <span className="font-medium text-green-800">Payment ID:</span>
-                      <span className="font-mono text-green-700">{paymentData.paymentId}</span>
-                    </div>
-                  )}
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <svg className="w-10 h-10 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
-                  </svg>
-                </div>
-                <h1 className="text-3xl font-bold text-red-600 mb-2">Payment Failed ❌</h1>
-                <p className="text-gray-600 mb-4">{paymentData.message}</p>
-                <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-                  <div className="flex justify-between items-center">
-                    <span className="font-medium text-red-800">Status:</span>
-                    <span className="font-bold text-red-700">❌ Failed</span>
-                  </div>
-                  <div className="flex justify-between items-center mt-2">
-                    <span className="font-medium text-red-800">Error:</span>
-                    <span className="text-red-700">{paymentData.error}</span>
-                  </div>
-                  {paymentData.cardLast4 && (
-                    <div className="flex justify-between items-center mt-2">
-                      <span className="font-medium text-red-800">Card Used:</span>
-                      <span className="text-red-700">****{paymentData.cardLast4}</span>
-                    </div>
-                  )}
-                </div>
-              </>
-            )}
+      <div className="min-h-screen bg-purple-100 py-8">
+        <div className="max-w-4xl mx-auto px-4">
+          <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+            <div className="bg-red-500 text-white p-6 text-center">
+              <div className="text-6xl mb-4">❌</div>
+              <h1 className="text-3xl font-bold">Payment Failed</h1>
+              <p className="text-red-100 mt-2">{paymentResult?.message || 'Payment system error'}</p>
+            </div>
+            <div className="p-6 text-center">
+              <button 
+                onClick={handleTryAgain}
+                className="bg-purple-600 text-white py-3 px-8 rounded-lg hover:bg-purple-700 font-semibold mr-4"
+              >
+                Try Again
+              </button>
+              <button 
+                onClick={handleBackToShop}
+                className="bg-gray-500 text-white py-3 px-8 rounded-lg hover:bg-gray-600 font-semibold"
+              >
+                Back to Shop
+              </button>
+            </div>
           </div>
         </div>
+      </div>
+    );
+  }
 
-        {/* Action Buttons */}
-        <div className="bg-white rounded-xl shadow-lg p-8 text-center">
-          {paymentData.success ? (
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-gray-800">Payment Completed Successfully! 🎉</h3>
-              <p className="text-gray-600">Your order has been processed and you will receive a confirmation email shortly.</p>
-              <button
-                onClick={handleContinueShopping}
-                className="px-8 py-3 bg-purple-700 text-white rounded-lg hover:bg-purple-800 transition-colors font-medium"
+  // SUCCESS CASES
+  if (paymentResult.paymentMethod === 'cod') {
+    return (
+      <div className="min-h-screen bg-purple-100 py-8">
+        <div className="max-w-4xl mx-auto px-4">
+          <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+            <div className="bg-yellow-500 text-white p-6 text-center">
+              <div className="text-6xl mb-4">💰</div>
+              <h1 className="text-3xl font-bold">Order Confirmed - Cash on Delivery</h1>
+              <p className="text-yellow-100 mt-2">Pay when you receive your order</p>
+            </div>
+            <div className="p-6">
+              <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-lg mb-6">
+                <h3 className="font-bold text-yellow-800 mb-2">💡 Important:</h3>
+                <p className="text-yellow-700">Please have the exact amount ready when your order arrives.</p>
+                <p className="text-yellow-700">Amount to pay: <strong>LKR {paymentResult.amount}</strong></p>
+              </div>
+              <div className="text-center">
+                <button 
+                  onClick={handleBackToShop}
+                  className="bg-purple-600 text-white py-3 px-8 rounded-lg hover:bg-purple-700 font-semibold"
+                >
+                  Continue Shopping
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (paymentResult.paymentMethod === 'bank_transfer') {
+    return (
+      <div className="min-h-screen bg-purple-100 py-8">
+        <div className="max-w-4xl mx-auto px-4">
+          <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+            <div className="bg-purple-500 text-white p-6 text-center">
+              <div className="text-6xl mb-4">🏦</div>
+              <h1 className="text-3xl font-bold">Bank Transfer Details</h1>
+              <p className="text-purple-100 mt-2">Please transfer to the account below</p>
+            </div>
+            <div className="p-6">
+              <div className="bg-purple-50 border border-purple-200 p-6 rounded-lg mb-6 text-center">
+                <h3 className="font-bold text-purple-800 mb-4 text-xl">Transfer Details:</h3>
+                <div className="space-y-2">
+                  <p className="text-2xl font-bold text-purple-800">Account: 9535942775533</p>
+                  <p className="text-lg text-purple-600">Bank: ABC Bank</p>
+                  <p className="text-lg font-bold text-purple-800">Amount: LKR {paymentResult.amount}</p>
+                </div>
+                <div className="mt-4 p-4 bg-white rounded border">
+                  <p className="text-sm text-gray-600">
+                    <strong>Important:</strong> Please use Order ID "{paymentResult.orderId}" as the transfer reference.
+                  </p>
+                </div>
+              </div>
+              <div className="text-center">
+                <button 
+                  onClick={handleBackToShop}
+                  className="bg-purple-600 text-white py-3 px-8 rounded-lg hover:bg-purple-700 font-semibold"
+                >
+                  Continue Shopping
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // PayHere Card Success
+  return (
+    <div className="min-h-screen bg-purple-100 py-8">
+      <div className="max-w-4xl mx-auto px-4">
+        <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+          <div className="bg-green-500 text-white p-6 text-center">
+            <div className="text-6xl mb-4">✅</div>
+            <h1 className="text-3xl font-bold">Payment Successful!</h1>
+            <p className="text-green-100 mt-2">{paymentResult.message}</p>
+          </div>
+          <div className="p-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <div className="bg-green-50 p-4 rounded-lg">
+                <h3 className="text-lg font-semibold text-green-800 mb-3">Payment Information</h3>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span>Status:</span>
+                    <span className="font-semibold text-green-600">✅ Completed</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Transaction ID:</span>
+                    <span className="font-mono text-xs">{paymentResult.transactionId}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Amount:</span>
+                    <span className="font-semibold">LKR {paymentResult.amount}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Card:</span>
+                    <span className="font-mono">****{paymentResult.cardLast4}</span>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-blue-50 p-4 rounded-lg">
+                <h3 className="text-lg font-semibold text-blue-800 mb-3">Customer Info</h3>
+                <div className="space-y-1 text-sm">
+                  <p><strong>Name:</strong> {paymentResult.customerInfo?.name}</p>
+                  <p><strong>Email:</strong> {paymentResult.customerInfo?.email}</p>
+                  <p><strong>Phone:</strong> {paymentResult.customerInfo?.phone}</p>
+                </div>
+              </div>
+            </div>
+            <div className="text-center">
+              <button 
+                onClick={handleBackToShop}
+                className="bg-purple-600 text-white py-3 px-8 rounded-lg hover:bg-purple-700 font-semibold"
               >
                 Continue Shopping
               </button>
             </div>
-          ) : (
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-gray-800">Payment Failed</h3>
-              <p className="text-gray-600">Don't worry! You can try again or choose a different payment method.</p>
-              <div className="flex gap-4 justify-center">
-                <button
-                  onClick={() => navigate('/payment')}
-                  className="px-6 py-3 bg-purple-700 text-white rounded-lg hover:bg-purple-800 transition-colors"
-                >
-                  Try Again
-                </button>
-                <button
-                  onClick={handleContinueShopping}
-                  className="px-6 py-3 border border-purple-700 text-purple-700 rounded-lg hover:bg-purple-50 transition-colors"
-                >
-                  Back to Shop
-                </button>
-              </div>
-            </div>
-          )}
+          </div>
         </div>
       </div>
     </div>
