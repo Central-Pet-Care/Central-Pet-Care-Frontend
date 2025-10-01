@@ -7,7 +7,7 @@ const PaymentAdminDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState(null);
   const [error, setError] = useState(null);
-  const [searchQuery, setSearchQuery] = useState(''); // Add search state
+  const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
 
   // Fetch payments from backend
@@ -19,140 +19,121 @@ const PaymentAdminDashboard = () => {
     try {
       setLoading(true);
       setError(null);
-      
+
       const response = await fetch('http://localhost:5000/api/payments', {
         method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
       });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
       const data = await response.json();
-      
-      // Transform your actual MongoDB data structure
-      const transformedPayments = data.map(payment => ({
-        id: payment._id,
-        orderId: payment.orderId,
-        name: payment.customerInfo?.name || 'Unknown Customer',
-        email: payment.email || payment.customerInfo?.email || '',
-        phone: payment.customerInfo?.phone || '',
-        itemsNo: payment.items?.length || 0,
-        amount: payment.amount, // Keep the original LKR amount as stored
-        currency: payment.currency || 'LKR',
-        payType: payment.method === 'payhere_direct' ? 'PayHere Direct' : 
-                 payment.method === 'credit_card' ? 'Credit Card' : 
-                 payment.paymentDetails?.paymentMethod || payment.method || 'N/A',
-        status: payment.status || 'pending',
-        cardLast4: payment.paymentDetails?.cardLast4 || '',
-        transactionId: payment.transactionId || '',
-        createdAt: payment.createdAt,
-        paymentDate: payment.paymentDate,
-        city: payment.customerInfo?.city || '',
-        items: payment.items || []
+
+      // ✅ Transform to consistent frontend structure
+      const transformed = (Array.isArray(data) ? data : []).map((p) => ({
+        id: p._id,
+        orderId: p.orderId || 'N/A',
+        name: p.customerInfo?.name || 'Unknown Customer',
+        email: p.email || p.customerInfo?.email || '',
+        phone: p.customerInfo?.phone || '',
+        itemsNo: p.items?.length || 0,
+        amount: Number(p.amount) || 0,
+        currency: p.currency || 'LKR',
+        payType:
+          p.method === 'payhere_direct'
+            ? 'PayHere Direct'
+            : p.method === 'credit_card'
+            ? 'Credit Card'
+            : p.paymentDetails?.paymentMethod || p.method || 'N/A',
+        status: p.status || 'pending',
+        cardLast4: p.paymentDetails?.cardLast4 || '',
+        transactionId: p.transactionId || '',
+        createdAt: p.createdAt,
+        paymentDate: p.paymentDate,
+        city: p.customerInfo?.city || '',
+        items: p.items || [],
       }));
 
-      setPayments(transformedPayments);
-    } catch (error) {
-      console.error('Error fetching payments:', error);
+      setPayments(transformed);
+    } catch (err) {
+      console.error('Error fetching payments:', err);
       setError('Failed to fetch payments from server');
-      
     } finally {
       setLoading(false);
     }
   };
 
-  // Calculate statistics
-  const completedPayments = payments.filter(p => p.status === 'completed').length;
-  const completedAmount = payments.filter(p => p.status === 'completed').reduce((sum, p) => sum + p.amount, 0);
-  const pendingApproval = payments.filter(p => p.status === 'pending').length;
-  const pendingAmount = payments.filter(p => p.status === 'pending').reduce((sum, p) => sum + p.amount, 0);
+  // --- Statistics ---
+  const completedPayments = payments.filter((p) => p.status === 'completed').length;
+  const completedAmount = payments
+    .filter((p) => p.status === 'completed')
+    .reduce((sum, p) => sum + p.amount, 0);
 
-  // Filter payments based on search query
-  const filteredPayments = payments.filter(payment => 
-    payment.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    payment.orderId.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    payment.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    payment.transactionId.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    payment.status.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    payment.payType.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const pendingApproval = payments.filter((p) => p.status === 'pending').length;
+  const pendingAmount = payments
+    .filter((p) => p.status === 'pending')
+    .reduce((sum, p) => sum + p.amount, 0);
 
-  const handleEdit = (id) => {
-    setEditingId(id);
-  };
+  // --- Search ---
+  const filteredPayments = payments.filter((p) => {
+    const q = searchQuery.toLowerCase();
+    return (
+      p.name.toLowerCase().includes(q) ||
+      p.orderId.toLowerCase().includes(q) ||
+      p.email.toLowerCase().includes(q) ||
+      p.transactionId.toLowerCase().includes(q) ||
+      p.status.toLowerCase().includes(q) ||
+      p.payType.toLowerCase().includes(q)
+    );
+  });
+
+  // --- Actions ---
+  const handleEdit = (id) => setEditingId(id);
 
   const handleStatusChange = async (id, newStatus) => {
     try {
-      // Update status in backend
       const response = await fetch(`http://localhost:5000/api/payments/${id}`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus }),
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to update payment status');
-      }
+      if (!response.ok) throw new Error('Failed to update payment status');
 
-      // Update local state
-      setPayments(payments.map(payment => 
-        payment.id === id ? { ...payment, status: newStatus } : payment
-      ));
-      
+      setPayments((prev) =>
+        prev.map((p) => (p.id === id ? { ...p, status: newStatus } : p))
+      );
       setEditingId(null);
-      
-      // Optional: Show success message
-      alert('Payment status updated successfully!');
-      
-    } catch (error) {
-      console.error('Error updating payment status:', error);
-      alert('Failed to update payment status. Please try again.');
-      
-      // Fallback: Update locally even if backend fails
-      setPayments(payments.map(payment => 
-        payment.id === id ? { ...payment, status: newStatus } : payment
-      ));
+      alert('✅ Payment status updated successfully!');
+    } catch (err) {
+      console.error('Error updating payment status:', err);
+      alert('❌ Failed to update payment status.');
       setEditingId(null);
     }
   };
 
-  const handleRefresh = () => {
-    fetchPayments();
-  };
+  const handleRefresh = () => fetchPayments();
 
-  const handleViewPayment = (payment) => {
-    // Navigate to PaymentView with payment data
+  const handleViewPayment = (payment) =>
     navigate('/admin/payment-view', { state: { paymentData: payment } });
-  };
 
   const handleGeneratePDF = () => {
-    console.log('PDF button clicked!');
-    console.log('Payments data:', payments);
-    
-    if (!payments || payments.length === 0) {
+    if (!payments.length) {
       alert('No payment data available to generate PDF');
       return;
     }
-    
     try {
       generatePaymentPDF(payments);
-      console.log('PDF generation completed');
-    } catch (error) {
-      console.error('Error generating PDF:', error);
-      alert('Failed to generate PDF: ' + error.message);
+    } catch (err) {
+      console.error('Error generating PDF:', err);
+      alert('Failed to generate PDF: ' + err.message);
     }
   };
 
-  const formatCurrency = (amount) => {
-    return `Rs ${amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-  };
+  const formatCurrency = (amount) =>
+    `Rs ${amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
 
+  // --- UI ---
   if (loading) {
     return (
       <div className="p-8">
@@ -165,11 +146,10 @@ const PaymentAdminDashboard = () => {
 
   return (
     <div className="p-8 bg-white min-h-screen">
-      {/* Title and Buttons */}
+      {/* Header */}
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-2xl font-bold text-gray-800">Payment Dashboard</h1>
         <div className="flex gap-4">
-          {/* Add PDF Button */}
           <button
             onClick={handleGeneratePDF}
             className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-medium"
@@ -184,24 +164,18 @@ const PaymentAdminDashboard = () => {
           </button>
         </div>
       </div>
-      
-      {/* Generate PDF Report Button */}
-      
 
       {/* Error Message */}
       {error && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
-          <p><strong>Warning:</strong> {error}. Showing mock data for testing.</p>
+          <p><strong>Warning:</strong> {error}</p>
         </div>
       )}
 
-      {/* 🔎 Search Bar */}
+      {/* Search */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
-        {/* Search Bar */}
         <div className="relative w-full md:w-96">
-          <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
-            🔍
-          </span>
+          <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">🔍</span>
           <input
             type="text"
             placeholder="Search by name, order ID, email, status, or payment type..."
@@ -221,8 +195,6 @@ const PaymentAdminDashboard = () => {
             </button>
           )}
         </div>
-
-        {/* Search Results Info */}
         {searchQuery && (
           <div className="text-sm text-gray-600">
             Showing {filteredPayments.length} of {payments.length} payments
@@ -230,47 +202,38 @@ const PaymentAdminDashboard = () => {
         )}
       </div>
 
-      {/* Statistics Cards - Update to use original payments data */}
+      {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        {/* Completed Payments No. */}
         <div className="bg-white border-2 border-gray-300 rounded-lg p-6 text-center">
-          <h3 className="text-sm font-medium text-gray-600 mb-2">Completed Payments no.</h3>
+          <h3 className="text-sm font-medium text-gray-600 mb-2">Completed Payments No.</h3>
           <p className="text-3xl font-bold text-blue-600">{completedPayments}</p>
         </div>
-
-        {/* Payments Completed Amount */}
         <div className="bg-white border-2 border-gray-300 rounded-lg p-6 text-center">
-          <h3 className="text-sm font-medium text-gray-600 mb-2">Payments completed amount</h3>
+          <h3 className="text-sm font-medium text-gray-600 mb-2">Payments Completed Amount</h3>
           <p className="text-3xl font-bold text-green-600">{formatCurrency(completedAmount)}</p>
         </div>
-
-        {/* Payments Need to be Approved No. */}
         <div className="bg-white border-2 border-gray-300 rounded-lg p-6 text-center">
-          <h3 className="text-sm font-medium text-gray-600 mb-2">Payments need to be approved No.</h3>
+          <h3 className="text-sm font-medium text-gray-600 mb-2">Pending Payments No.</h3>
           <p className="text-3xl font-bold text-orange-600">{pendingApproval}</p>
         </div>
-
-        {/* Payments Need to be Approved Amount */}
         <div className="bg-white border-2 border-gray-300 rounded-lg p-6 text-center">
-          <h3 className="text-sm font-medium text-gray-600 mb-2">Payments need to be approved amount</h3>
+          <h3 className="text-sm font-medium text-gray-600 mb-2">Pending Payments Amount</h3>
           <p className="text-3xl font-bold text-red-600">{formatCurrency(pendingAmount)}</p>
         </div>
       </div>
 
       {/* Table */}
       <div className="bg-white border-2 border-gray-300 rounded-lg overflow-hidden">
-        {/* Table Header */}
         <div className="grid grid-cols-7 bg-gray-50 border-b border-gray-300">
           <div className="p-4 text-center font-medium text-gray-700 border-r border-gray-300">No</div>
           <div className="p-4 text-center font-medium text-gray-700 border-r border-gray-300">Name</div>
-          <div className="p-4 text-center font-medium text-gray-700 border-r border-gray-300">Items no</div>
+          <div className="p-4 text-center font-medium text-gray-700 border-r border-gray-300">Items</div>
           <div className="p-4 text-center font-medium text-gray-700 border-r border-gray-300">Amount</div>
-          <div className="p-4 text-center font-medium text-gray-700 border-r border-gray-300">Pay type</div>
+          <div className="p-4 text-center font-medium text-gray-700 border-r border-gray-300">Pay Type</div>
           <div className="p-4 text-center font-medium text-gray-700 border-r border-gray-300">Status</div>
           <div className="p-4 text-center font-medium text-gray-700">Action</div>
         </div>
 
-        {/* Table Rows - Use filteredPayments instead of payments */}
         {filteredPayments.length === 0 ? (
           <div className="p-8 text-center text-gray-500">
             {searchQuery ? (
@@ -280,47 +243,32 @@ const PaymentAdminDashboard = () => {
                   onClick={() => setSearchQuery("")}
                   className="mt-2 text-purple-600 hover:text-purple-800 font-medium"
                 >
-                  Clear search to see all payments
+                  Clear search
                 </button>
               </>
             ) : (
-              'No payments found. Check if your backend is running.'
+              'No payments found.'
             )}
           </div>
         ) : (
-          filteredPayments.map((payment, index) => (
-            <div key={payment.id} className="grid grid-cols-7 border-b border-gray-300 hover:bg-gray-50">
-              {/* No */}
-              <div className="p-4 text-center border-r border-gray-300">{index + 1}</div>
-              
-              {/* Name */}
-              <div className="p-4 text-center border-r border-gray-300" title={`${payment.email} - ${payment.phone} - ${payment.city}`}>
-                <div className="font-medium">{payment.name}</div>
-                {payment.orderId && (
-                  <div className="text-xs text-gray-500 mt-1">{payment.orderId}</div>
-                )}
+          filteredPayments.map((p, i) => (
+            <div key={p.id} className="grid grid-cols-7 border-b border-gray-300 hover:bg-gray-50">
+              <div className="p-4 text-center border-r border-gray-300">{i + 1}</div>
+              <div className="p-4 text-center border-r border-gray-300" title={`${p.email} - ${p.phone} - ${p.city}`}>
+                <div className="font-medium">{p.name}</div>
+                {p.orderId && <div className="text-xs text-gray-500 mt-1">{p.orderId}</div>}
               </div>
-              
-              {/* Items No */}
-              <div className="p-4 text-center border-r border-gray-300">{payment.itemsNo}</div>
-              
-              {/* Amount */}
+              <div className="p-4 text-center border-r border-gray-300">{p.itemsNo}</div>
               <div className="p-4 text-center border-r border-gray-300">
-                <div className="font-medium">{formatCurrency(payment.amount)}</div>
-                {payment.cardLast4 && (
-                  <div className="text-xs text-gray-500 mt-1">****{payment.cardLast4}</div>
-                )}
+                <div className="font-medium">{formatCurrency(p.amount)}</div>
+                {p.cardLast4 && <div className="text-xs text-gray-500 mt-1">****{p.cardLast4}</div>}
               </div>
-              
-              {/* Pay Type */}
-              <div className="p-4 text-center border-r border-gray-300">{payment.payType}</div>
-              
-              {/* Status */}
+              <div className="p-4 text-center border-r border-gray-300">{p.payType}</div>
               <div className="p-4 text-center border-r border-gray-300">
-                {editingId === payment.id ? (
-                  <select 
-                    value={payment.status}
-                    onChange={(e) => handleStatusChange(payment.id, e.target.value)}
+                {editingId === p.id ? (
+                  <select
+                    value={p.status}
+                    onChange={(e) => handleStatusChange(p.id, e.target.value)}
                     className="border border-gray-300 rounded px-2 py-1 text-sm"
                     autoFocus
                   >
@@ -330,29 +278,32 @@ const PaymentAdminDashboard = () => {
                     <option value="rejected">Rejected</option>
                   </select>
                 ) : (
-                  <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                    payment.status === 'completed' ? 'bg-green-100 text-green-800' :
-                    payment.status === 'approved' ? 'bg-blue-100 text-blue-800' :
-                    payment.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                    'bg-red-100 text-red-800'
-                  }`}>
-                    {payment.status.charAt(0).toUpperCase() + payment.status.slice(1)}
+                  <span
+                    className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      p.status === 'completed'
+                        ? 'bg-green-100 text-green-800'
+                        : p.status === 'approved'
+                        ? 'bg-blue-100 text-blue-800'
+                        : p.status === 'pending'
+                        ? 'bg-yellow-100 text-yellow-800'
+                        : 'bg-red-100 text-red-800'
+                    }`}
+                  >
+                    {p.status.charAt(0).toUpperCase() + p.status.slice(1)}
                   </span>
                 )}
               </div>
-              
-              {/* Action */}
               <div className="p-4 text-center">
                 <div className="flex justify-center gap-2">
-                  <button 
-                    onClick={() => handleEdit(payment.id)}
+                  <button
+                    onClick={() => handleEdit(p.id)}
                     className="text-blue-600 hover:text-blue-800 font-medium text-sm px-2 py-1"
-                    disabled={editingId === payment.id}
+                    disabled={editingId === p.id}
                   >
-                    {editingId === payment.id ? 'Editing...' : 'Edit'}
+                    {editingId === p.id ? 'Editing...' : 'Edit'}
                   </button>
-                  <button 
-                    onClick={() => handleViewPayment(payment)}
+                  <button
+                    onClick={() => handleViewPayment(p)}
                     className="text-green-600 hover:text-green-800 font-medium text-sm px-2 py-1 border-l border-gray-300 pl-2"
                   >
                     View
