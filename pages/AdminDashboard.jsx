@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Sidebar from "../components/Sidebar";
 import AdminHeader from "../components/AdminHeader";
+import PaymentAdminDashboard from "./admin/PaymentAdminDashboard"; 
+import PaymentView from "./admin/PaymentView";
 import AdminServicesPage from "./admin/AdminServicesPage";
 import EditServicePage from "./admin/EditServicePage";
 import AddServicePage from "./admin/AddServicePage";
@@ -21,6 +23,7 @@ import AdminAdoptionsPage from "./admin/AdminAdoptionsPage";
 import AdminAdoptionViewPage from "./admin/AdminAdoptionViewPage";
 import AdminOrdersPage from "./admin/adminOrdersPage";
 import { Route, Routes } from "react-router-dom";
+
 
 
 export default function AdminDashboard() {
@@ -126,6 +129,9 @@ export default function AdminDashboard() {
               }
             />
 
+
+            <Route path="payments" element={<PaymentAdminDashboard />} />
+            <Route path="payment-view" element={<PaymentView />} />
             <Route path="/pets" element={<AdminPetsPage />} />
             <Route path="/pets/addPet" element={<AddPetPage />} />
             <Route path="/pets/medicalRecords" element={<HealthRecordsPage />} />
