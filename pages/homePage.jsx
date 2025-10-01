@@ -6,7 +6,6 @@ import PetSection from "../components/petSection";
 import Header from '../components/navBar';
 import Hero from '../components/hero';
 import AboutSection from "../components/aboutSec";
-
 import HomepagePetFoodsSection from '../components/HomepagePetFoodsSection';
 import CategoriesSection from '../components/homeCategorySection';
 import StatsSection from '../components/statSec';
@@ -16,6 +15,7 @@ import GallerySection from '../components/gallery';
 
 import Servicehome from '../components/servicehome';
 import Footer from "../components/footer";
+
 
 
 
@@ -65,8 +65,6 @@ export default function HomePage() {
 
 
       <Footer/>
-
-      
     </div>
   );
 }
