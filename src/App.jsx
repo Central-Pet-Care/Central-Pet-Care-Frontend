@@ -54,7 +54,7 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/shipping" element={<ShippingScreen />} />
           <Route path="/order/:orderId" element={<OrderSummary />} />
-          <Route path="/payment" element={<PaymentPage />} />
+          <Route path="/payment/:orderId" element={<PaymentPage />} />
           <Route path="/PayConfo" element={<PayConfo />} />
           <Route path="/shipping" element={<ShippingData />} />
       </Routes>

@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useParams, useNavigate } from "react-router-dom";
 
 const PaymentPage = () => {
+  const { orderId } = useParams();   // ✅ fix orderId
+  const navigate = useNavigate();
+
   const [orderData, setOrderData] = useState(null);
   const [paymentMethod, setPaymentMethod] = useState('payhere');
   const [paymentData, setPaymentData] = useState({
@@ -14,107 +18,106 @@ const PaymentPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Get orderId from URL
-  const getOrderIdFromURL = () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get('orderId');
-  };
-
-  const orderId = getOrderIdFromURL();
-
   // Fetch order data
-  const fetchOrderData = async () => {
-    if (!orderId) {
-      setError('No Order ID provided');
-      setLoading(false);
-      return;
-    }
+   const fetchOrderData = async () => {
+  if (!orderId) {
+    setError('No Order ID provided');
+    setLoading(false);
+    return;
+  }
 
-    try {
-      console.log('Fetching order:', orderId);
-      const response = await axios.get(`http://localhost:5000/api/payments/order/${orderId}`);
-      
-      if (response.data.success) {
-        setOrderData(response.data.order);
-        setError(null);
-      } else {
-        setError('Order not found');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      setError('Cannot connect to server');
-    } finally {
-      setLoading(false);
+  try {
+    const response = await axios.get(`http://localhost:5000/api/payments/order/${orderId}`);
+    console.log("Fetched order response:", response.data); // 👈 check structure in console
+
+    // Fix: backend එකේ structure check කරලා correct key use කරන්න
+    if (response.data.success) {
+      const order = response.data.order || response.data.data || response.data.orders;
+      setOrderData(order);
+    } else {
+      setError('Order not found');
     }
-  };
+  } catch (error) {
+    console.error('Error:', error);
+    setError('Cannot connect to server');
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   useEffect(() => {
     fetchOrderData();
   }, [orderId]);
 
   // Process payment
-  const handlePayment = async () => {
-    setProcessing(true);
+     // Process payment
+const handlePayment = async () => {
+  setProcessing(true);
 
-    try {
-      const paymentPayload = {
-        orderId: orderId,
-        paymentMethod: paymentMethod
-      };
+  try {
+    const paymentPayload = {
+      orderId: orderId,
+      paymentMethod: paymentMethod
+    };
 
-      // Add card details only for PayHere
-      if (paymentMethod === 'payhere') {
-        if (!paymentData.cardNumber || !paymentData.expiryDate || !paymentData.cvv || !paymentData.cardholderName) {
-          alert('Please fill all card details');
-          setProcessing(false);
-          return;
-        }
-        paymentPayload.cardDetails = {
-          cardNumber: paymentData.cardNumber.replace(/\s/g, ''),
-          expiryMonth: paymentData.expiryDate.split('/')[0],
-          expiryYear: `20${paymentData.expiryDate.split('/')[1]}`,
-          cvv: paymentData.cvv,
-          cardholderName: paymentData.cardholderName
-        };
+    // Add card details only for PayHere
+    if (paymentMethod === 'payhere') {
+      if (!paymentData.cardNumber || !paymentData.expiryDate || !paymentData.cvv || !paymentData.cardholderName) {
+        alert('Please fill all card details');
+        setProcessing(false);
+        return;
       }
-
-      const response = await axios.post('http://localhost:5000/api/payments/process-direct', paymentPayload);
-
-      // Store result based on payment method
-      const resultData = {
-        success: response.data.success,
-        orderId: orderId,
-        amount: orderData.totalAmount,
-        paymentMethod: paymentMethod,
-        message: response.data.message,
-        customerInfo: orderData.customerInfo,
-        items: orderData.orderedItems
+      paymentPayload.cardDetails = {
+        cardNumber: paymentData.cardNumber.replace(/\s/g, ''),
+        expiryMonth: paymentData.expiryDate.split('/')[0],
+        expiryYear: `20${paymentData.expiryDate.split('/')[1]}`,
+        cvv: paymentData.cvv,
+        cardholderName: paymentData.cardholderName
       };
-
-      if (paymentMethod === 'payhere') {
-        resultData.transactionId = response.data.paymentId;
-        resultData.cardLast4 = response.data.data?.cardLast4;
-      } else if (paymentMethod === 'bank_transfer') {
-        resultData.bankDetails = response.data.bankDetails;
-      }
-
-      localStorage.setItem("paymentSuccess", JSON.stringify(resultData));
-      window.location.href = '/PayConfo';
-
-    } catch (error) {
-      localStorage.setItem("paymentSuccess", JSON.stringify({
-        success: false,
-        orderId: orderId,
-        paymentMethod: paymentMethod,
-        error: error.response?.data?.message || 'Payment failed',
-        message: error.response?.data?.message || 'Payment system error'
-      }));
-
-      window.location.href = '/PayConfo';
-    } finally {
-      setProcessing(false);
     }
-  };
+
+    const response = await axios.post('http://localhost:5000/api/payments/process-direct', paymentPayload);
+
+    // ✅ FIX: customerInfo use karanna
+    const resultData = {
+      success: response.data.success,
+      orderId: orderId,
+      amount: orderData.totalAmount,
+      paymentMethod: paymentMethod,
+      message: response.data.message,
+      name: orderData.customerInfo?.name,
+      email: orderData.customerInfo?.email,
+      phone: orderData.customerInfo?.phone,
+      address: orderData.customerInfo?.address,
+      items: orderData.orderedItems
+    };
+
+    if (paymentMethod === 'payhere') {
+      resultData.transactionId = response.data.paymentId;
+      resultData.cardLast4 = response.data.data?.cardLast4;
+    } else if (paymentMethod === 'bank_transfer') {
+      resultData.bankDetails = response.data.bankDetails;
+    }
+
+    localStorage.setItem("paymentSuccess", JSON.stringify(resultData));
+    navigate('/PayConfo');
+
+  } catch (error) {
+    localStorage.setItem("paymentSuccess", JSON.stringify({
+      success: false,
+      orderId: orderId,
+      paymentMethod: paymentMethod,
+      error: error.response?.data?.message || 'Payment failed',
+      message: error.response?.data?.message || 'Payment system error'
+    }));
+
+    navigate('/PayConfo');
+  } finally {
+    setProcessing(false);
+  }
+};
+
 
   if (loading) {
     return (
@@ -134,7 +137,7 @@ const PaymentPage = () => {
           <h2 className="text-xl font-bold text-red-600 mb-4">Error</h2>
           <p className="mb-4">{error}</p>
           <button 
-            onClick={() => window.location.href = '/'}
+            onClick={() => navigate('/')}
             className="bg-purple-600 text-white py-2 px-4 rounded"
           >
             Back to Home
@@ -157,14 +160,13 @@ const PaymentPage = () => {
             {/* Customer Information */}
             <div className="bg-white rounded-lg shadow-lg p-6">
               <h2 className="text-xl font-bold text-purple-800 mb-4">Customer Information</h2>
-              <div className="space-y-2 text-sm">
-                <p><strong>Name:</strong> {orderData.customerInfo.name}</p>
-                <p><strong>Email:</strong> {orderData.customerInfo.email}</p>
-                <p><strong>Phone:</strong> {orderData.customerInfo.phone}</p>
-                <p><strong>Address:</strong> {orderData.customerInfo.address}</p>
-                <p><strong>City:</strong> {orderData.customerInfo.city}</p>
-                <p><strong>Postal Code:</strong> {orderData.customerInfo.postalCode}</p>
-              </div>
+                 <div className="space-y-2 text-sm">
+                      <p><strong>Name:</strong> {orderData.customerInfo?.name}</p>
+                      <p><strong>Email:</strong> {orderData.customerInfo?.email}</p>
+                      <p><strong>Phone:</strong> {orderData.customerInfo?.phone}</p>
+                      <p><strong>Address:</strong> {orderData.customerInfo?.address}</p>
+                </div>
+
             </div>
 
             {/* Payment Method Selection */}

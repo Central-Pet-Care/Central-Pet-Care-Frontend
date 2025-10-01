@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom"; // ✅ added useNavigate
 import axios from "axios";
 import {
   BsBoxSeam,
@@ -7,12 +7,13 @@ import {
   BsTruck,
   BsPerson,
   BsGeoAlt,
+  BsCart4, // ✅ icon for shopping
 } from "react-icons/bs";
 import generateOrderForm from "../../utils/generateOrderSummary";
 
-
 export default function OrderSummary() {
   const { orderId } = useParams();
+  const navigate = useNavigate(); // ✅ hook for navigation
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -122,22 +123,35 @@ export default function OrderSummary() {
 
               {/* 📥 Actions */}
               <div className="mt-6 flex flex-col sm:flex-row gap-4">
+                {/* Download Summary */}
                 <button
                   onClick={() => {
-               if (!order) {
-                  alert("No order data found!");
-                  return;
-                }
-                  generateOrderForm(order);
-               }}
+                    if (!order) {
+                      alert("No order data found!");
+                      return;
+                    }
+                    generateOrderForm(order);
+                  }}
                   className="w-full bg-purple-600 text-white py-3 px-6 rounded-lg font-semibold shadow-md flex items-center justify-center gap-2 hover:bg-purple-700 transition"
                 >
-                 <BsReceipt className="w-5 h-5" />
-              Download Summary
-            </button>
+                  <BsReceipt className="w-5 h-5" />
+                  Download Summary
+                </button>
 
-                <button className="w-full bg-transparent border-2 border-purple-600 text-purple-600 py-3 px-6 rounded-lg font-semibold flex items-center justify-center gap-2 hover:bg-purple-600 hover:text-white transition">
+                {/* Track Order */}
+                <button
+                  onClick={() => navigate("/trackOrder")}
+                  className="w-full bg-transparent border-2 border-purple-600 text-purple-600 py-3 px-6 rounded-lg font-semibold flex items-center justify-center gap-2 hover:bg-purple-600 hover:text-white transition"
+                >
                   <BsTruck className="w-5 h-5" /> Track this Order
+                </button>
+
+                {/* Continue Shopping */}
+                <button
+                  onClick={() => navigate("/shop")}
+                  className="w-full bg-green-600 text-white py-3 px-6 rounded-lg font-semibold shadow-md flex items-center justify-center gap-2 hover:bg-green-700 transition"
+                >
+                  <BsCart4 className="w-5 h-5" /> Continue Shopping
                 </button>
               </div>
             </div>
@@ -149,22 +163,16 @@ export default function OrderSummary() {
               <h3 className="text-xl font-semibold text-gray-800 mb-3 flex items-center gap-2">
                 <BsPerson className="w-5 h-5 text-purple-600" /> Customer
               </h3>
-              <p className="text-gray-700">
-                {order.shipping.firstName} {order.shipping.lastName}
-              </p>
+              <p className="text-gray-700">{order.name}</p>
               <p className="text-gray-500">{order.email}</p>
-              <p className="text-gray-500">{order.shipping.phone}</p>
+              <p className="text-gray-500">{order.phone}</p>
             </div>
 
             <div className="bg-white p-6 rounded-lg shadow-md border border-gray-100">
               <h3 className="text-xl font-semibold text-gray-800 mb-3 flex items-center gap-2">
                 <BsGeoAlt className="w-5 h-5 text-purple-600" /> Shipping Address
               </h3>
-              <p className="text-gray-700">{order.shipping.address}</p>
-              <p className="text-gray-700">
-                {order.shipping.city}, {order.shipping.province}{" "}
-                {order.shipping.postalCode}
-              </p>
+              <p className="text-gray-700">{order.address}</p>
             </div>
           </div>
         </div>
