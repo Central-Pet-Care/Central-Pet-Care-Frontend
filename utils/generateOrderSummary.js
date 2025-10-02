@@ -5,8 +5,8 @@ export default async function generateOrderForm(order) {
   const doc = new jsPDF("p", "mm", "a4");
 
   // 🎨 Theme colors
-  const purple = [125, 78, 172]; // paw logo purple
-  const lightPurple = [242, 235, 250]; // light background
+  const purple = [125, 78, 172];
+  const lightPurple = [242, 235, 250];
 
   // ========== Company Header ==========
   const logoUrl =
@@ -45,12 +45,11 @@ export default async function generateOrderForm(order) {
   doc.text(`Order No: ${orderId}`, 160, 20);
   doc.text(`Date: ${orderDate}`, 160, 28);
 
-  // Customer & Shipping Info
-  const shipping = order.shipping || {};
-  const customerName = `${shipping.firstName || ""} ${shipping.lastName || ""}`;
-  const customerAddress = `${shipping.address || ""}, ${shipping.city || ""}, ${shipping.province || ""} ${shipping.postalCode || ""}`;
-  const customerPhone = shipping.phone || "N/A";
+  // ========== Customer Info ==========
+  const customerName = order.name || "N/A";
   const customerEmail = order.email || "N/A";
+  const customerPhone = order.phone || "N/A";
+  const customerAddress = order.address || "N/A";
 
   // Bill To
   doc.setFont("helvetica", "bold");
@@ -63,20 +62,22 @@ export default async function generateOrderForm(order) {
   doc.text(customerEmail, 15, 63);
   doc.text(customerPhone, 15, 69);
 
-  // Ship To
+  // Ship To (same as address field in your order)
   doc.setFont("helvetica", "bold");
   doc.setTextColor(...purple);
   doc.text("Ship To:", 110, 50);
 
   doc.setFont("helvetica", "normal");
   doc.setTextColor(0, 0, 0);
-  doc.text(customerAddress, 110, 57);
+  doc.text(customerName, 110, 57);
+  doc.text(customerAddress, 110, 63);
+  doc.text(customerPhone, 110, 69);
 
   // ========== Items Table ==========
   const tableData = order.orderedItems.map((item) => [
     item.quantity,
     item.name,
-    "0%", // tax column
+    "0%",
     `Rs.${item.price}`,
     `Rs.${item.price * item.quantity}`,
   ]);

@@ -3,12 +3,20 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Toaster } from "react-hot-toast";
 import PetSection from "../components/petSection";
-import AdoptionStats from "../components/adoptionStats";
 import Header from '../components/navBar';
 import Hero from '../components/hero';
 import AboutSection from "../components/aboutSec";
+import HomepagePetFoodsSection from '../components/HomepagePetFoodsSection';
+import CategoriesSection from '../components/homeCategorySection';
+import StatsSection from '../components/statSec';
+import FAQSection from '../components/faqSec';
+import WhyChooseUs from '../components/whyChoose';
+import GallerySection from '../components/gallery';
+
 import Servicehome from '../components/servicehome';
 import Footer from "../components/footer";
+
+
 
 
 export default function HomePage() {
@@ -35,25 +43,28 @@ export default function HomePage() {
     <div className="w-full">
       <Header />
       <Hero />
-
-
-    
       <Toaster />
-      <AdoptionStats/>
-
+      
+      <AboutSection/>
+      <CategoriesSection/>
+      <StatsSection/>
       <PetSection
         title="Pet Adoption Highlights"
         subtitle="Meet some of our lovely pets waiting for a forever home."
-        pets={pets.slice(0, 5)} 
+        pets={pets.slice(0, 4)} 
         loading={loading}
         showAllLink={true}
       />
+      <Servicehome/>
 
-      <AboutSection/>
-      <Servicehome></Servicehome>
+    
+      <HomepagePetFoodsSection/>
+      <GallerySection/>
+      <FAQSection/>
+      <WhyChooseUs/>
+
+
       <Footer/>
-
-      
     </div>
   );
 }

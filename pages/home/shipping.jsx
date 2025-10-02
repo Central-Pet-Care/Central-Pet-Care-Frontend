@@ -119,7 +119,6 @@ export default function ShippingScreen() {
 
     try {
       const orderData = {
-        // ❌ Removed frontend orderId generation
         orderedItems: mergedCart.map((item) => ({
           itemType: "product",
           itemId: item.productId,
@@ -128,10 +127,11 @@ export default function ShippingScreen() {
           quantity: item.qty,
           image: item.images?.[0] || "",
         })),
-        shipping,
+        name: `${shipping.firstName} ${shipping.lastName}`,
+        address: `${shipping.address}, ${shipping.city}, ${shipping.province}, ${shipping.postalCode}`,
+        phone: shipping.phone,
         totalAmount: total,
-        email: "guest@example.com", // 🔄 replace with real user email if logged in
-        status: "Draft", // store as Draft until payment
+        status: "Pending",
       };
 
       const token = localStorage.getItem("token");
@@ -141,6 +141,21 @@ export default function ShippingScreen() {
 
       const { orderId, message } = res.data;
       setMessage(message || "Order created successfully ✅");
+
+      // ✅ Save customer info to localStorage for PayConfo.jsx
+      localStorage.setItem(
+        "paymentSuccess",
+        JSON.stringify({
+          success: true,
+          orderId,
+          amount: total,
+          paymentMethod: "pending", // updated after actual payment
+          name: `${shipping.firstName} ${shipping.lastName}`,
+          email: "", // add if you collect in future
+          phone: shipping.phone,
+          message: "Order created. Proceed to payment.",
+        })
+      );
 
       // Clear form
       setShipping({

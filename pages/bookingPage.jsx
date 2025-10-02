@@ -513,6 +513,22 @@ const navigate = useNavigate(); // <-- 🆕 useNavigate hook
             )}
           </form>
         </div>
+        
+{/* 🔘 View Bookings Section */}
+<div className="bg-purple-100 rounded-2xl shadow-inner px-6 py-4 mt-10 flex items-center justify-between">
+  {/* 📝 Note */}
+  <p className="text-purple-800 font-medium text-sm">
+    💡 You can view and manage all your bookings anytime.
+  </p>
+
+  {/* 📖 Button */}
+  <button
+    onClick={() => navigate("/my-bookings")}
+    className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-5 rounded-xl shadow-md transition duration-300"
+  >
+    📖 View Bookings
+  </button>
+</div>
 
 
         {/* ✅ Google Map Section */}
