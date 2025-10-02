@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import Header from "../components/navBar";
 import axios from "axios";
 import toast from "react-hot-toast";
+import Footer from "../components/footer";
 import {
   FaPaw,
   FaVenusMars,
@@ -178,16 +179,16 @@ export default function MyAdoptionsPage() {
       <section className="relative bg-gradient-to-r from-violet-100 via-violet-200 to-violet-100 shadow-md overflow-hidden">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center px-6 py-20 relative z-10">
           <div className="text-center md:text-left">
-            <h1 className="text-4xl md:text-5xl font-extrabold text-violet-900 leading-tight mb-4 ml-28">
+            <h1 className="text-4xl md:text-5xl font-extrabold text-violet-900 leading-tight mb-4 ml-20">
               Track Your  Pet Adoption Requests
             </h1>
-            <p className="text-violet-700 mb-6 text-base md:text-lg ml-28">
+            <p className="text-violet-700 mb-6 text-base md:text-lg ml-20">
               From application to approval and beyond — follow every step of
               your adoption journey with ease.
             </p>
             <Link
               to="/pets"
-              className="px-8 py-3 bg-purple-700 text-white font-semibold rounded-full shadow hover:bg-purple-800 transition ml-53"
+              className="px-8 py-3 bg-purple-700 text-white font-semibold rounded-full shadow hover:bg-purple-800 transition ml-20"
             >
               Adopt Pets
             </Link>
@@ -196,9 +197,9 @@ export default function MyAdoptionsPage() {
           <div className="flex justify-center md:justify-end relative">
             <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[26rem] h-[26rem] bg-violet-400/20 rounded-full blur-3xl"></div>
             <img
-              src="https://fhuoudyottvtaawdswlz.supabase.co/storage/v1/object/public/images/AdoptionPage/girl.png"
+              src="https://fhuoudyottvtaawdswlz.supabase.co/storage/v1/object/public/images/AdoptionPage/adop.png"
               alt="Happy pets with food"
-              className="relative w-75 max-w-4xl md:max-w-5xl drop-shadow-2xl mr-17 mb-2 "
+              className="relative w-130 max-w-4xl md:max-w-5xl drop-shadow-2xl mr-10 mb-2 "
             />
           </div>
         </div>
@@ -408,6 +409,7 @@ export default function MyAdoptionsPage() {
 
 
       </div>
+      <Footer />
     </div>
 
     
