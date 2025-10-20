@@ -1,4 +1,4 @@
-// src/pages/AdoptionForm.jsx
+
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link, useLocation } from "react-router-dom";
 import axios from "axios";
@@ -25,7 +25,6 @@ export default function AdoptionForm() {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
-  // ✅ Validation function
   const validateField = (name, value) => {
     switch (name) {
       case "fullName":
@@ -62,7 +61,7 @@ export default function AdoptionForm() {
     }
   };
 
-  // ✅ Run validation live
+  //Run validation live
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -73,7 +72,7 @@ export default function AdoptionForm() {
     }));
   };
 
-  // ✅ Prefill data when editing
+  //Prefill data 
   useEffect(() => {
     if (!isEditMode || !petId) return;
 
