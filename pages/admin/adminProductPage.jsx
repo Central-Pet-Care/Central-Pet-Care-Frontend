@@ -72,9 +72,9 @@ export default function AdminProductsPage() {
         🛒 Admin Products Management
       </h1>
 
-      {/* 🔍 Search + Category Filter */}
+      {/*  Search + Category Filter */}
       <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
-        {/* 🔍 Search Bar */}
+        {/*  Search Bar */}
         <input
           type="text"
           placeholder="Search by product name..."
@@ -83,7 +83,7 @@ export default function AdminProductsPage() {
           className="border p-2 rounded w-1/3 focus:ring focus:ring-indigo-300"
         />
 
-        {/* 🐾 Category Buttons */}
+        {/* Category Buttons */}
         <div className="flex flex-wrap gap-2">
           {[
             { key: "all", label: "All" },
@@ -175,7 +175,7 @@ export default function AdminProductsPage() {
                     </td>
 
                     <td className="px-6 py-4 text-center flex justify-center gap-4">
-                      {/* ✏️ Edit */}
+                      {/*  Edit */}
                       <button
                         className="text-blue-500 hover:text-blue-700 transition"
                         title="Edit"
@@ -186,7 +186,7 @@ export default function AdminProductsPage() {
                         <FaPencilAlt />
                       </button>
 
-                      {/* 🗑️ Delete */}
+                      {/*  Delete */}
                       <button
                         className="text-red-500 hover:text-red-700 transition"
                         title="Delete"
