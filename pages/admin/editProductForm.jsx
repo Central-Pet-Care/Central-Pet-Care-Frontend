@@ -5,7 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { FaArrowLeft, FaTimesCircle } from "react-icons/fa";
 import uploadMediaToSupabase from "../../utils/mediaUpload";
 
-/* 🔹 Reusable Input Component */
+
 const Input = ({ name, value, type = "text", placeholder, min, error, onChange }) => (
   <div className="flex flex-col">
     <input
@@ -28,15 +28,15 @@ export default function EditProductPage() {
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
 
-  /* 📝 Form State */
+  /*  Form State */
   const [form, setForm] = useState(null);
 
-  /* ⚠️ Validation + UI State */
+  
   const [errors, setErrors] = useState({});
   const [previewImages, setPreviewImages] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  /* ✅ Fetch product on mount */
+  /* Fetch product on mount */
   useEffect(() => {
     const fetchProduct = async () => {
       try {
@@ -45,7 +45,7 @@ export default function EditProductPage() {
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        // 🟢 Pre-fill form with product data
+        // Pre-fill form with product data
 const p = data.product;
 
 setForm({
@@ -71,7 +71,7 @@ setPreviewImages(p.images || []);
     fetchProduct();
   }, [productId, navigate]);
 
-  /* ✅ Field-level validation */
+  /*  Field-level validation */
   const validateField = useCallback((name, value) => {
     let msg = "";
     if (name === "name" && !value) msg = "Product name is required";
@@ -90,7 +90,7 @@ setPreviewImages(p.images || []);
     setErrors((prev) => ({ ...prev, [name]: msg }));
   }, []);
 
-  /* 🔄 Handle input changes */
+  /*  Handle input changes */
   const handleChange = useCallback(
     (e) => {
       const { name, value } = e.target;
@@ -100,7 +100,7 @@ setPreviewImages(p.images || []);
     [validateField]
   );
 
-  /* 📸 Handle image uploads */
+  /*  Handle image uploads */
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
     if (!files.length) return;
@@ -119,7 +119,7 @@ setPreviewImages(p.images || []);
     toast.success("🗑 Image removed");
   };
 
-  /* 🚀 Submit */
+  /* Submit */
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.name || !form.categoryId || !form.description || !form.price || form.stock === "")
@@ -130,7 +130,7 @@ setPreviewImages(p.images || []);
     try {
       setLoading(true);
 
-      // 🖼 Upload new images (File objects only)
+      // 🖼Upload new images (File objects only)
       const uploadedUrls = await Promise.all(
         form.images.map(async (file) => {
           if (typeof file === "string") return file; // already uploaded
@@ -171,7 +171,7 @@ setPreviewImages(p.images || []);
     }
   };
 
-  /* ⏳ Loading State */
+  /*  Loading State */
   if (!form) {
     return (
       <div className="min-h-screen flex items-center justify-center text-gray-600">
