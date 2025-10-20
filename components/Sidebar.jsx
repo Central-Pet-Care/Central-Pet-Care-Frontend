@@ -9,6 +9,7 @@ import {
   FaCalendarCheck,
   FaSignOutAlt,
   FaShieldAlt,
+  FaClipboardCheck,
 } from "react-icons/fa";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 
@@ -25,6 +26,7 @@ export default function Sidebar() {
   const menuItems = [
     { to: "/admin/*", icon: <FaTachometerAlt />, label: "Dashboard" },
     { to: "/admin/pets", icon: <FaPaw />, label: "Pets" },
+    { to: "/admin/review-pets", icon: <FaClipboardCheck />, label: "Review Pets" },
     { to: "/admin/services", icon: <FaServicestack />, label: "Services" },
     { to: "/admin/bookings", icon: <FaCalendarCheck />, label: "Bookings" },
     { to: "/admin/adoptions", icon: <FaHeart />, label: "Adoptions" },

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import PetCard from "./petCard";
 
 export default function PetSection({ title, subtitle, pets, loading, showAllLink }) {
-  // ✅ Show only first 4 pets
+  // Show only first 4 pets
   const displayedPets = pets.slice(0, 4);
 
   return (

@@ -102,24 +102,12 @@ export default function AdminPetsPage() {
             <thead className="bg-gradient-to-r from-purple-500 to-indigo-500 text-white">
               <tr>
                 <th className="px-6 py-3 text-left text-sm font-semibold">ID</th>
-                <th className="px-6 py-3 text-left text-sm font-semibold">
-                  Image
-                </th>
-                <th className="px-6 py-3 text-left text-sm font-semibold">
-                  Name
-                </th>
-                <th className="px-6 py-3 text-left text-sm font-semibold">
-                  Species
-                </th>
-                <th className="px-6 py-3 text-left text-sm font-semibold">
-                  Price
-                </th>
-                <th className="px-6 py-3 text-left text-sm font-semibold">
-                  Status
-                </th>
-                <th className="px-6 py-3 text-center text-sm font-semibold">
-                  Actions
-                </th>
+                <th className="px-6 py-3 text-left text-sm font-semibold">Image</th>
+                <th className="px-6 py-3 text-left text-sm font-semibold">Name</th>
+                <th className="px-6 py-3 text-left text-sm font-semibold">Species</th>
+                <th className="px-6 py-3 text-left text-sm font-semibold">Price</th>
+                <th className="px-6 py-3 text-left text-sm font-semibold">Status</th>
+                <th className="px-6 py-3 text-center text-sm font-semibold">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -131,9 +119,7 @@ export default function AdminPetsPage() {
                       index % 2 === 0 ? "bg-gray-100" : "bg-white"
                     }`}
                   >
-                    <td className="px-6 py-4 text-sm text-gray-700">
-                      {pet.petId}
-                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-700">{pet.petId}</td>
 
                     <td className="px-6 py-4">
                       <img
@@ -143,18 +129,13 @@ export default function AdminPetsPage() {
                       />
                     </td>
 
-                    <td className="px-6 py-4 text-sm font-medium text-gray-900">
-                      {pet.name}
-                    </td>
+                    <td className="px-6 py-4 text-sm font-medium text-gray-900">{pet.name}</td>
 
-                    <td className="px-6 py-4 text-sm text-gray-700">
-                      {pet.species}
-                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-700">{pet.species}</td>
 
                     <td className="px-6 py-4 text-sm text-green-600 font-semibold">
-                        RS.{Number(pet.price).toFixed(2)}
+                      RS.{Number(pet.price).toFixed(2)}
                     </td>
-
 
                     <td className="px-6 py-4">
                       <span
@@ -193,34 +174,22 @@ export default function AdminPetsPage() {
                       <button
                         className="text-red-500 hover:text-red-700 transition"
                         title="Delete"
-                        onClick={() => {
-                          if (
-                            !window.confirm(
-                              "Are you sure you want to delete this pet?"
-                            )
-                          )
-                            return;
+                        onClick={async () => {
+                          if (!window.confirm("Are you sure you want to delete this pet?")) return;
 
-                          const token = localStorage.getItem("token");
-
-                          axios
-                            .delete(
-                              `http://localhost:5000/api/pets/${pet.petId}`,
-                              {
-                                headers: { Authorization: `Bearer ${token}` },
-                              }
-                            )
-                            .then(() => {
-                              toast.success("Pet deleted successfully");
-                              setPetsLoaded(false);
-                            })
-                            .catch((err) => {
-                              console.error(
-                                "❌ Delete failed:",
-                                err.response || err.message
-                              );
-                              toast.error("Failed to delete pet");
+                          try {
+                            const token = localStorage.getItem("token");
+                            await axios.delete(`http://localhost:5000/api/pets/${pet.petId}`, {
+                              headers: { Authorization: `Bearer ${token}` },
                             });
+
+                            toast.success("Pet deleted successfully");
+                            // Remove pet from state immediately
+                            setPets((prevPets) => prevPets.filter((p) => p.petId !== pet.petId));
+                          } catch (err) {
+                            console.error("❌ Delete failed:", err.response || err.message);
+                            toast.error("Failed to delete pet");
+                          }
                         }}
                       >
                         <FaTrash />
@@ -230,10 +199,7 @@ export default function AdminPetsPage() {
                 ))
               ) : (
                 <tr>
-                  <td
-                    colSpan="7"
-                    className="px-6 py-4 text-center text-gray-500"
-                  >
+                  <td colSpan="7" className="px-6 py-4 text-center text-gray-500">
                     No pets found
                   </td>
                 </tr>
