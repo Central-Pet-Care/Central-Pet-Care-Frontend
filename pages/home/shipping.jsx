@@ -83,7 +83,7 @@ export default function ShippingScreen() {
     setErrors({ ...errors, province: "" });
   };
 
-  // ✅ Validation
+ 
   const validate = () => {
     let errs = {};
     const nameRegex = /^[A-Za-z]{2,}(?: [A-Za-z]+)*$/;
@@ -112,7 +112,7 @@ export default function ShippingScreen() {
     return Object.keys(errs).length === 0;
   };
 
-  // ✅ Submit with JWT token
+  //  Submit with JWT token
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
@@ -142,16 +142,16 @@ export default function ShippingScreen() {
       const { orderId, message } = res.data;
       setMessage(message || "Order created successfully ✅");
 
-      // ✅ Save customer info to localStorage for PayConfo.jsx
+      // Save customer info to localStorage for PayConfo.jsx
       localStorage.setItem(
         "paymentSuccess",
         JSON.stringify({
           success: true,
           orderId,
           amount: total,
-          paymentMethod: "pending", // updated after actual payment
+          paymentMethod: "pending", 
           name: `${shipping.firstName} ${shipping.lastName}`,
-          email: "", // add if you collect in future
+          email: "", 
           phone: shipping.phone,
           message: "Order created. Proceed to payment.",
         })

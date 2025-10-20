@@ -24,6 +24,8 @@ import AdminDashboard from '../pages/AdminDashboard'
 import PaymentPage from '../pages/PaymentPage.jsx';
 import PayConfo from '../pages/PayConfo.jsx';
 import ShippingData from '../pages/shipingData.jsx';
+import OrderTrack from '../pages/home/trackOrder.jsx'
+import OrderHistory from '../pages/home/orderHistory.jsx'
 
 function App() {
   return (
@@ -57,6 +59,9 @@ function App() {
           <Route path="/payment/:orderId" element={<PaymentPage />} />
           <Route path="/PayConfo" element={<PayConfo />} />
           <Route path="/shipping" element={<ShippingData />} />
+          <Route path="/trackOrder/:orderId" element={<OrderTrack />} />
+          <Route path="/orders/:email" element={<OrderHistory />} />
+        
       </Routes>
 
       </BrowserRouter>
