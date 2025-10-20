@@ -23,6 +23,7 @@ import AdminAdoptionsPage from "./admin/AdminAdoptionsPage";
 import AdminAdoptionViewPage from "./admin/AdminAdoptionViewPage";
 import AdminOrdersPage from "./admin/adminOrdersPage";
 import { Route, Routes } from "react-router-dom";
+import AdminReviewPetsPage from "./admin/adminReviewPetsPage";
 
 
 
@@ -134,6 +135,7 @@ export default function AdminDashboard() {
             <Route path="payment-view" element={<PaymentView />} />
             <Route path="/pets" element={<AdminPetsPage />} />
             <Route path="/pets/addPet" element={<AddPetPage />} />
+            <Route path="review-pets" element={<AdminReviewPetsPage />} />
             <Route path="/pets/medicalRecords" element={<HealthRecordsPage />} />
             <Route path="/pets/editPet" element={<UpdatePetPage />} />
             <Route path="products" element={<AdminProductsPage />} />
