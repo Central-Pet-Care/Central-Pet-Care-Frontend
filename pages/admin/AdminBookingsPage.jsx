@@ -8,7 +8,7 @@ export default function AdminBookingsPage() {
   const [loading, setLoading] = useState(true);
   const [selectedBooking, setSelectedBooking] = useState(null); // ✅ for View Modal
 
-  // ✅ Fetch all bookings (Admin only)
+  // Fetch all bookings (Admin only)
   useEffect(() => {
     fetchBookings();
   }, []);
@@ -28,7 +28,7 @@ export default function AdminBookingsPage() {
     }
   };
 
-  // ✅ Change booking status
+  //  Change booking status
   const handleStatusChange = async (id, status) => {
     try {
       await axios.patch(
@@ -54,7 +54,7 @@ export default function AdminBookingsPage() {
     }
   };
 
-  // ✅ Delete booking with toast confirmation
+  //  Delete booking with toast confirmation
   const handleDelete = async (id) => {
     toast(
       (t) => (
@@ -77,7 +77,7 @@ export default function AdminBookingsPage() {
                   toast.dismiss(t.id);
                   toast.success("🗑️ Booking deleted successfully!");
                   fetchBookings();
-                  setSelectedBooking(null); // ✅ Close modal if open
+                  setSelectedBooking(null); //  Close modal if open
                 } catch (err) {
                   toast.dismiss(t.id);
                   toast.error("❌ Error deleting booking");
@@ -211,6 +211,9 @@ export default function AdminBookingsPage() {
                     >
                       Delete
                     </button>
+
+                    
+
                   </div>
                 </td>
               </tr>

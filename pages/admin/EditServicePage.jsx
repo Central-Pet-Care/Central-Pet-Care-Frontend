@@ -66,8 +66,6 @@ export default function EditServicePage() {
         break;
       case "duration":
         if (!value) error = "Duration is required";
-        else if (isNaN(value)) error = "Duration must be a number";
-        else if (value <= 0) error = "Duration must be greater than 0";
         break;
       case "description":
         if (!value.trim()) error = "Full description is required";
@@ -219,49 +217,36 @@ export default function EditServicePage() {
           </div>
 
           {/* Price & Duration */}
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-gray-700 font-medium mb-1">
-                Price
+              <label className="flex items-center gap-2 text-gray-700 font-medium mb-1">
+                <DollarSign className="w-5 h-5 text-purple-600" /> Price
               </label>
-              <div className="relative">
-                <DollarSign className="absolute left-3 top-3 text-gray-400 w-5 h-5" />
-                <input
-                  type="number"
-                  name="price"
-                  value={formData.price}
-                  onChange={handleChange}
-                  className={`w-full pl-10 border rounded-md px-4 py-2 focus:outline-none focus:ring-2 ${
-                    errors.price
-                      ? "border-red-500 focus:ring-red-400"
-                      : "border-gray-300 focus:ring-indigo-400"
-                  }`}
-                />
-              </div>
+              <input
+                type="number"
+                name="price"
+                value={formData.price}
+                onChange={handleChange}
+                className="w-full border px-4 py-2 rounded-lg focus:ring-2 focus:ring-purple-300"
+              />
               {errors.price && (
-                <p className="text-red-500 text-sm mt-1">{errors.price}</p>
+                <p className="text-red-500 text-xs mt-1">{errors.price}</p>
               )}
             </div>
             <div>
-              <label className="block text-gray-700 font-medium mb-1">
-                Duration
+              <label className="flex items-center gap-2 text-gray-700 font-medium mb-1">
+                <Clock className="w-5 h-5 text-purple-600" /> Duration
               </label>
-              <div className="relative">
-                <Clock className="absolute left-3 top-3 text-gray-400 w-5 h-5" />
-                <input
-                  type="number"
-                  name="duration"
-                  value={formData.duration}
-                  onChange={handleChange}
-                  className={`w-full pl-10 border rounded-md px-4 py-2 focus:outline-none focus:ring-2 ${
-                    errors.duration
-                      ? "border-red-500 focus:ring-red-400"
-                      : "border-gray-300 focus:ring-indigo-400"
-                  }`}
-                />
-              </div>
+              <input
+                type="text"
+                name="duration"
+                placeholder="e.g., 2 hours 30 minutes"
+                value={formData.duration}
+                onChange={handleChange}
+                className="w-full border px-4 py-2 rounded-lg focus:ring-2 focus:ring-purple-300"
+              />
               {errors.duration && (
-                <p className="text-red-500 text-sm mt-1">{errors.duration}</p>
+                <p className="text-red-500 text-xs mt-1">{errors.duration}</p>
               )}
             </div>
           </div>
