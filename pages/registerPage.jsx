@@ -37,16 +37,23 @@ export default function RegisterPage() {
     let error = "";
 
     switch (name) {
-      case "firstName":
+          case "firstName":
         if (!value.trim()) error = "First name is required.";
+        else if (/\d/.test(value)) error = "First name cannot contain numbers.";
         break;
       case "lastName":
         if (!value.trim()) error = "Last name is required.";
+        else if (/\d/.test(value)) error = "Last name cannot contain numbers.";
         break;
+
       case "email":
-        if (!value.trim()) error = "Email is required.";
-        else if (!/^\S+@\S+\.\S+$/.test(value)) error = "Enter a valid email.";
-        break;
+  if (!value.trim()) error = "Email is required.";
+  else if (
+    !/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(value)
+  )
+    error = "Enter a valid email address.";
+  break;
+
       case "password":
         if (value.length < 6) error = "Password must be at least 6 characters.";
         break;
@@ -98,14 +105,20 @@ export default function RegisterPage() {
         }
       );
 
-      if (res.data.success) {
-        toast.success("Registration successful! Redirecting...");
-        setTimeout(() => {
-          window.location.href = "/";
-        }, 1500);
-      } else {
-        toast.error(res.data.message || "Registration failed.");
-      }
+     if (res.data.success) {
+  toast.success("Registration successful! Redirecting...");
+  setTimeout(() => {
+    window.location.href = "/";
+  }, 1500);
+} else if (
+  res.data.message &&
+  res.data.message.toLowerCase().includes("email")
+) {
+  toast.error("You’ve already used this email.");
+} else {
+  toast.error(res.data.message || "Registration failed.");
+}
+
     } catch (err) {
       console.error(err);
       toast.error("Something went wrong. Try again.");

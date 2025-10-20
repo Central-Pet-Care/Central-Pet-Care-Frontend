@@ -4,12 +4,52 @@ import toast from "react-hot-toast";
 import Header from "../components/navBar";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("Your email");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState({ email: "", password: "" });
+
   console.log(import.meta.env.VITE_BACKEND_URL);
 
+  // 🔹 Live validation
+  const validateEmail = (value) => {
+    if (!value) return "Email is required.";
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(value)) return "Enter a valid email address.";
+    return "";
+  };
+
+  const validatePassword = (value) => {
+    if (!value) return "Password is required.";
+    if (value.length < 6) return "Password must be at least 6 characters.";
+    return "";
+  };
+
+  // 🔹 Handle input changes with live validation
+  const handleEmailChange = (e) => {
+    const value = e.target.value;
+    setEmail(value);
+    setErrors((prev) => ({ ...prev, email: validateEmail(value) }));
+  };
+
+  const handlePasswordChange = (e) => {
+    const value = e.target.value;
+    setPassword(value);
+    setErrors((prev) => ({ ...prev, password: validatePassword(value) }));
+  };
+
   function login() {
-    axios.post(import.meta.env.VITE_BACKEND_URL + "/api/users/login", {
+    // ======= Validate before submit =======
+    const emailError = validateEmail(email);
+    const passwordError = validatePassword(password);
+    setErrors({ email: emailError, password: passwordError });
+
+    if (emailError || passwordError) {
+      toast.error("Please correct the highlighted fields.");
+      return;
+    }
+
+    axios
+      .post(import.meta.env.VITE_BACKEND_URL + "/api/users/login", {
         email: email,
         password: password,
       })
@@ -21,14 +61,14 @@ export default function LoginPage() {
         toast.success("Login Success");
         localStorage.setItem("token", res.data.token);
         localStorage.setItem("user", JSON.stringify(res.data.user));
-        
-        // ✅ Get redirect param
+
+        // Get redirect param
         const params = new URLSearchParams(window.location.search);
         const redirect = params.get("redirect");
 
         if (redirect) {
           if (res.data.user.type === "customer") {
-            window.location.href = redirect; // ✅ Only customers can adopt
+            window.location.href = redirect; // Only customers can adopt
           } else {
             toast.error("Only customers can adopt a pet.");
             window.location.href = "/"; // redirect them home
@@ -64,20 +104,30 @@ export default function LoginPage() {
             {/* Email */}
             <input
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={handleEmailChange}
               type="text"
               placeholder="Email"
-              className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 mb-4"
+              className={`w-full px-4 py-3 rounded-lg border ${
+                errors.email ? "border-red-400" : "border-gray-200"
+              } bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 mb-1`}
             />
+            {errors.email && (
+              <p className="text-red-500 text-sm mb-3">{errors.email}</p>
+            )}
 
             {/* Password */}
             <input
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={handlePasswordChange}
               type="password"
               placeholder="Password"
-              className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 mb-4"
+              className={`w-full px-4 py-3 rounded-lg border ${
+                errors.password ? "border-red-400" : "border-gray-200"
+              } bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 mb-1`}
             />
+            {errors.password && (
+              <p className="text-red-500 text-sm mb-3">{errors.password}</p>
+            )}
 
             {/* Remember Me */}
             <div className="flex items-center mb-4">
@@ -104,23 +154,17 @@ export default function LoginPage() {
             </p>
           </div>
 
-           {/* Right Section - Image with smaller bottom overlay */}
+          {/* Right Section - Image with smaller bottom overlay */}
           <div className="relative bg-gradient-to-br from-blue-100 via-blue-200 to-blue-100 flex justify-center items-center p-6">
-           {/* Bigger Puppy Image */}
-  <img
-    src="https://fhuoudyottvtaawdswlz.supabase.co/storage/v1/object/public/images/dog01.jpg"
-    alt="Puppy"
-    className="max-h-[500px] object-contain drop-shadow-lg"
-  />
-
-  </div>
-</div>
-
-
-       
-
+            {/* Bigger Puppy Image */}
+            <img
+              src="https://fhuoudyottvtaawdswlz.supabase.co/storage/v1/object/public/images/dog01.jpg" 
+              alt="Puppy"
+              className="max-h-[500px] object-contain drop-shadow-lg"
+            />
+          </div>
         </div>
       </div>
-    
+    </div>
   );
 }
