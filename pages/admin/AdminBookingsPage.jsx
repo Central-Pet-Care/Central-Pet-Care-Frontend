@@ -15,7 +15,7 @@ export default function AdminBookingsPage() {
 
   const fetchBookings = async () => {
     try {
-      const res = await axios.get("import.meta.env.VITE_BACKEND_URL/api/booking", {
+      const res = await axios.get(import.meta.env.VITE_BACKEND_URL + "/api/booking", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

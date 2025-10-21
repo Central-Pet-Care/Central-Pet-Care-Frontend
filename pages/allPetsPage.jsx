@@ -19,7 +19,7 @@ export default function AllPetsPage() {
   useEffect(() => {
     async function fetchPets() {
       try {
-        const res = await axios.get("import.meta.env.VITE_BACKEND_URL/api/pets");
+        const res = await axios.get(import.meta.env.VITE_BACKEND_URL + "/api/pets");
         setPets(res.data);
       } catch (err) {
         console.error("Error fetching pets:", err);

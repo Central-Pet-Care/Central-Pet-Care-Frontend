@@ -21,7 +21,7 @@ export default function AdminReviewPetsPage({ onPetApproved }) {
     try {
       setLoading(true);
       const res = await axios.get(
-        "import.meta.env.VITE_BACKEND_URL/api/pets/pending/public",
+        import.meta.env.VITE_BACKEND_URL + "/api/pets/pending/public",
         { headers: token ? { Authorization: `Bearer ${token}` } : {} }
       );
       setSubmissions(res.data || []);

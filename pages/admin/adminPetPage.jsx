@@ -17,7 +17,7 @@ export default function AdminPetsPage() {
       const token = localStorage.getItem("token");
 
       axios
-        .get("import.meta.env.VITE_BACKEND_URL/api/pets", {
+        .get(import.meta.env.VITE_BACKEND_URL + "/api/pets", {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
         })
         .then((res) => {

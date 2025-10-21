@@ -10,7 +10,7 @@ export default function PetAccessories() {
   useEffect(() => {
     if (loadingStatus === "loading") {
       axios
-        .get("import.meta.env.VITE_BACKEND_URL/api/products?category=CAT0004") // filter accessories
+        .get(import.meta.env.VITE_BACKEND_URL + "/api/products?category=CAT0004") // filter accessories
         .then((res) => {
           setProducts(res.data.List)
           setLoadingStatus("loaded")

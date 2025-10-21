@@ -9,7 +9,7 @@ export default function Toys() {
 
   useEffect(() => {
     if (loadingStatus === "loading") {
-      axios.get("import.meta.env.VITE_BACKEND_URL/api/products?category=CAT0002")
+      axios.get(import.meta.env.VITE_BACKEND_URL + "/api/products?category=CAT0002")
         .then((res) => {
           setProducts(res.data.List)
           setLoadingStatus("loaded")

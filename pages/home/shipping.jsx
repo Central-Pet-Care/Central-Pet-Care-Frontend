@@ -45,7 +45,7 @@ export default function ShippingScreen() {
       try {
         const ids = cart.map((c) => c.productId);
         const res = await axios.post(
-          "import.meta.env.VITE_BACKEND_URL/api/products/cart-products",
+          import.meta.env.VITE_BACKEND_URL + "/api/products/cart-products",
           { ids }
         );
         setProducts(res.data.products || []);
@@ -135,7 +135,7 @@ export default function ShippingScreen() {
       };
 
       const token = localStorage.getItem("token");
-      const res = await axios.post("import.meta.env.VITE_BACKEND_URL/api/orders", orderData, {
+      const res = await axios.post(import.meta.env.VITE_BACKEND_URL + "/api/orders", orderData, {
         headers: token ? { Authorization: `Bearer ${token}` } : {},
       });
 

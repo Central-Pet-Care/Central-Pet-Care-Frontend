@@ -34,7 +34,7 @@ export default function OrderHistory() {
         }
 
         // ✅ Call the correct endpoint with token and email
-        const res = await axios.get("import.meta.env.VITE_BACKEND_URL/api/orders", {
+        const res = await axios.get(import.meta.env.VITE_BACKEND_URL + "/api/orders", {
           headers: { Authorization: `Bearer ${token}` },
           params: { email },
         });

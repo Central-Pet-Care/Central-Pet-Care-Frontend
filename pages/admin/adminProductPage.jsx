@@ -17,7 +17,7 @@ export default function AdminProductsPage() {
       const token = localStorage.getItem("token");
 
       axios
-        .get("import.meta.env.VITE_BACKEND_URL/api/products", {
+        .get(import.meta.env.VITE_BACKEND_URL + "/api/products", {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
         })
         .then((res) => {

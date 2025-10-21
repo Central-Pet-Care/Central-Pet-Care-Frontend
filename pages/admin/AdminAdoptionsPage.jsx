@@ -13,7 +13,7 @@ export default function AdminAdoptionsPage() {
   const fetchAdoptions = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get("import.meta.env.VITE_BACKEND_URL/api/adoptions", {
+      const res = await axios.get(import.meta.env.VITE_BACKEND_URL + "/api/adoptions", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setAdoptions(res.data);

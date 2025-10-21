@@ -18,7 +18,7 @@ export default function AdminServicesPage() {
 
   const fetchServices = async () => {
     try {
-      const res = await axios.get("import.meta.env.VITE_BACKEND_URL/api/service");
+      const res = await axios.get(import.meta.env.VITE_BACKEND_URL + "/api/service");
       setServices(res.data);
       setLoading(false);
     } catch (err) {

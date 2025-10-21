@@ -10,7 +10,7 @@ export default function PetMedicines() {
   useEffect(() => {
     if (loadingStatus === "loading") {
       axios
-        .get("import.meta.env.VITE_BACKEND_URL/api/products?category=CAT0003") // filter medicines
+        .get(import.meta.env.VITE_BACKEND_URL + "/api/products?category=CAT0003") // filter medicines
         .then((res) => {
           setProducts(res.data.List)
           setLoadingStatus("loaded")

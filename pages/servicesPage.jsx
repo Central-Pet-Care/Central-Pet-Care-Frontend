@@ -12,7 +12,7 @@ export default function ServicePage() {
 
   useEffect(() => {
     axios
-      .get("import.meta.env.VITE_BACKEND_URL/api/service")
+      .get(import.meta.env.VITE_BACKEND_URL + "/api/service")
       .then((res) => {
         setServices(res.data);
         setFilteredServices(res.data);

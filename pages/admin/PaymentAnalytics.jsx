@@ -45,7 +45,7 @@ export default function PaymentAnalytics() {
   const fetchPayments = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get("import.meta.env.VITE_BACKEND_URL/api/payments", {
+      const res = await axios.get(import.meta.env.VITE_BACKEND_URL + "/api/payments", {
         headers: { Authorization: `Bearer ${token}` },
       });
 

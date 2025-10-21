@@ -30,7 +30,7 @@ export default function MyAdoptionsPage() {
           return;
         }
 
-        const res = await axios.get("import.meta.env.VITE_BACKEND_URL/api/adoptions/my", {
+        const res = await axios.get(import.meta.env.VITE_BACKEND_URL + "/api/adoptions/my", {
           headers: { Authorization: `Bearer ${token}` },
         });
 

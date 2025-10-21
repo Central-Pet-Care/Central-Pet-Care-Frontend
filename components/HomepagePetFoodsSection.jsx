@@ -12,7 +12,7 @@ export default function HomepagePetFoodsSection() {
   useEffect(() => {
     if (loadingStatus === "loading") {
       axios
-        .get("import.meta.env.VITE_BACKEND_URL/api/products?category=CAT0001")
+        .get(import.meta.env.VITE_BACKEND_URL + "/api/products?category=CAT0001")
         .then((res) => {
           // ✅ Show only 4 products
           setProducts((res.data.List || []).slice(0, 4));

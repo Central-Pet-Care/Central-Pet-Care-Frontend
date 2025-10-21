@@ -26,7 +26,7 @@ export default function ProductOverview() {
 
   useEffect(() => {
     axios
-      .get("import.meta.env.VITE_BACKEND_URL/api/products/" + productId)
+      .get(import.meta.env.VITE_BACKEND_URL + "/api/products/" + productId)
       .then((res) => {
         if (res.data && res.data.product) {
           setProduct(res.data.product);

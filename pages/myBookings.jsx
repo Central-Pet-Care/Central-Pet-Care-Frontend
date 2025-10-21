@@ -17,7 +17,7 @@ export default function MyBookings() {
     const token = localStorage.getItem("token");
     if (token) {
       axios
-        .get("import.meta.env.VITE_BACKEND_URL/api/booking/user/me", {
+        .get(import.meta.env.VITE_BACKEND_URL + "/api/booking/user/me", {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -59,7 +59,7 @@ export default function MyBookings() {
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        "import.meta.env.VITE_BACKEND_URL/api/cart",
+        import.meta.env.VITE_BACKEND_URL + "/api/cart",
         {
           serviceId: booking.serviceId?._id,
           bookingId: booking._id,
