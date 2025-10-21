@@ -27,7 +27,7 @@ export default function AddProductPage() {
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
 
-  /* 📝 Form State */
+  /*  Form State */
   const [form, setForm] = useState({
     name: "",
     categoryId: "",
@@ -53,16 +53,16 @@ export default function AddProductPage() {
     images: [],
   });
 
-  /* ⚠️ Validation + UI State */
+  
   const [errors, setErrors] = useState({});
   const [previewImages, setPreviewImages] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  /* ✅ Field-level validation */
+  
   const validateField = useCallback((name, value) => {
     let msg = "";
 
-    // Required
+    
     if (name === "name" && !value) msg = "Product name is required";
     if (name === "categoryId" && !value) msg = "Category is required";
     if (name === "description" && !value) msg = "Description is required";

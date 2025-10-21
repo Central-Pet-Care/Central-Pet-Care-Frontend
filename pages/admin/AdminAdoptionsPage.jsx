@@ -3,13 +3,13 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { FaCheck, FaTimes, FaClipboardCheck } from "react-icons/fa";
+import generateAdoptionReport from "../../utils/generateAdoptionReport";
 
 export default function AdminAdoptionsPage() {
   const [adoptions, setAdoptions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filterStatus, setFilterStatus] = useState("");
 
-  // Fetch adoption requests
   const fetchAdoptions = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -29,7 +29,6 @@ export default function AdminAdoptionsPage() {
     fetchAdoptions();
   }, []);
 
-  // Update adoption status (Approve / Reject / Complete)
   const handleStatusChange = async (adoptionId, status) => {
     try {
       const token = localStorage.getItem("token");
@@ -59,9 +58,19 @@ export default function AdminAdoptionsPage() {
 
   return (
     <div className="p-8 bg-gray-50 min-h-screen relative">
-      <h1 className="text-3xl font-bold mb-6 text-gray-800">
-        📝 Admin Adoption Management
-      </h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold text-gray-800">
+          📝 Admin Adoption Management
+        </h1>
+
+        {/* ✅ Download Report Button */}
+        <button
+          onClick={() => generateAdoptionReport(filteredAdoptions)}
+          className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition"
+        >
+          📄 Download Monthly Report
+        </button>
+      </div>
 
       {/* Filter Pills */}
       <div className="flex flex-wrap gap-2 mb-6">

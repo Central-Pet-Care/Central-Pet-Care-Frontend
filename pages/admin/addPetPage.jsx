@@ -51,7 +51,7 @@ export default function AddPetPage() {
   const [previewImages, setPreviewImages] = useState([]); // Local preview URLs
   const [loading, setLoading] = useState(false);
 
-  /* ✅ Field-level validation logic */
+  /* Field-level validation logic */
   const validateField = useCallback((name, value) => {
     const letters = /^[A-Za-z\s]*$/;
     let msg = "";
@@ -59,7 +59,7 @@ export default function AddPetPage() {
     if (name === "name" && !value) msg = "Name is required";
     if (["name", "breed", "color"].includes(name) && value && !letters.test(value))
       msg = "Only letters allowed";
-    if (name === "ageYears" && (value < 0 || value > 20)) msg = "Age must be 0–20";
+    if (name === "ageYears" && (value < 1 || value > 20)) msg = "Age must be 1–20";
     if (name === "price" && value < 1) msg = "Price must be greater than 0";
 
     setErrors((prev) => ({ ...prev, [name]: msg }));

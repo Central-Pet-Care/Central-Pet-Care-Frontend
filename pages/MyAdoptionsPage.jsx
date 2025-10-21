@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import Header from "../components/navBar";
 import axios from "axios";
 import toast from "react-hot-toast";
+import Footer from "../components/footer";
 import {
   FaPaw,
   FaVenusMars,
@@ -83,7 +84,6 @@ export default function MyAdoptionsPage() {
     });
   };
 
-  // ✅ Row Layout Renderer (used for both Active + History)
   const renderAdoptionRows = (list) => (
     <div className="max-w-5xl mx-auto flex flex-col gap-4 px-6">
       {list.map((adoption) => {
@@ -96,14 +96,12 @@ export default function MyAdoptionsPage() {
             key={adoption._id}
             className="flex items-center gap-4 bg-white rounded-2xl shadow-md p-4 hover:shadow-lg transition border border-gray-200"
           >
-            {/* Pet Image */}
             <img
               src={imgUrl}
               alt={pet?.name || "Pet"}
               className="w-24 h-24 object-cover rounded-xl border"
             />
 
-            {/* Info Section */}
             <div className="flex-1">
               <h3 className="text-lg font-semibold text-gray-800">
                 {pet?.name || "Unknown Pet"}
@@ -113,7 +111,6 @@ export default function MyAdoptionsPage() {
                 {pet?.species} • {pet?.ageYears} yrs • {pet?.sex}
               </p>
 
-              {/* Status Badge */}
               <span
                 className={`inline-block mt-2 text-xs font-semibold px-3 py-0.5 rounded-full ${
                   adoption.adoptionStatus?.toUpperCase() === "APPROVED"
@@ -174,20 +171,19 @@ export default function MyAdoptionsPage() {
     <div className="min-h-screen bg-gradient-to-b from-purple-100 via-pink-50 to-white flex flex-col relative">
       <Header />
 
-      {/* Hero Section */}
       <section className="relative bg-gradient-to-r from-violet-100 via-violet-200 to-violet-100 shadow-md overflow-hidden">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center px-6 py-20 relative z-10">
           <div className="text-center md:text-left">
-            <h1 className="text-4xl md:text-5xl font-extrabold text-violet-900 leading-tight mb-4 ml-28">
+            <h1 className="text-4xl md:text-5xl font-extrabold text-violet-900 leading-tight mb-4 ml-20">
               Track Your  Pet Adoption Requests
             </h1>
-            <p className="text-violet-700 mb-6 text-base md:text-lg ml-28">
+            <p className="text-violet-700 mb-6 text-base md:text-lg ml-20">
               From application to approval and beyond — follow every step of
               your adoption journey with ease.
             </p>
             <Link
               to="/pets"
-              className="px-8 py-3 bg-purple-700 text-white font-semibold rounded-full shadow hover:bg-purple-800 transition ml-53"
+              className="px-8 py-3 bg-purple-700 text-white font-semibold rounded-full shadow hover:bg-purple-800 transition ml-20"
             >
               Adopt Pets
             </Link>
@@ -196,9 +192,9 @@ export default function MyAdoptionsPage() {
           <div className="flex justify-center md:justify-end relative">
             <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[26rem] h-[26rem] bg-violet-400/20 rounded-full blur-3xl"></div>
             <img
-              src="https://fhuoudyottvtaawdswlz.supabase.co/storage/v1/object/public/images/AdoptionPage/girl.png"
+              src="https://fhuoudyottvtaawdswlz.supabase.co/storage/v1/object/public/images/AdoptionPage/adop.png"
               alt="Happy pets with food"
-              className="relative w-75 max-w-4xl md:max-w-5xl drop-shadow-2xl mr-17 mb-2 "
+              className="relative w-130 max-w-4xl md:max-w-5xl drop-shadow-2xl mr-10 mb-2 "
             />
           </div>
         </div>
@@ -265,7 +261,6 @@ export default function MyAdoptionsPage() {
             )}
           </>
         )}
-          {/* ✅ Adoption Tips Section */}
         <section className="py-16 bg-pink-50">
           <h2 className="text-3xl font-extrabold text-purple-900 text-center mb-10">
             Adoption Tips & Checklist 📝
@@ -288,7 +283,7 @@ export default function MyAdoptionsPage() {
           </div>
         </section>
 
-        {/* ✅ Success Stories Section */}
+        {/*Success Stories Section */}
         <section className="py-16 bg-pink-50">
           <h2 className="text-3xl font-extrabold text-purple-900 text-center mb-10">
             Success Stories 🐕🐈
@@ -326,7 +321,7 @@ export default function MyAdoptionsPage() {
         </section>
 
 
-        {/* ✅ Extra Resources Section */}
+        {/*Extra Resources Section */}
 <section className="py-16 bg-pink-50">
   <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 px-6 text-center">
     {[
@@ -364,10 +359,10 @@ export default function MyAdoptionsPage() {
 </section>
 
 
-         {/* ✅ Visit Our Shelter Section (Map stays last) */}
+       
         <section className="relative bg-gradient-to-r from-violet-100 via-violet-200 to-violet-100 shadow-md overflow-hidden mt-">
           <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center px-6 py-20 relative z-10">
-            {/* Left Content */}
+            
             <div className="text-center md:text-left">
               <h2 className="text-4xl md:text-5xl font-extrabold text-violet-900 leading-tight mb-4">
                 Visit Our Shelter 🏠
@@ -382,7 +377,6 @@ export default function MyAdoptionsPage() {
               </button>
             </div>
 
-            {/*Content (Map) */}
             <div className="flex justify-center md:justify-end relative">
               <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[26rem] h-[26rem] bg-purple-400/20 rounded-full blur-3xl"></div>
               <div className="relative w-full max-w-4xl md:max-w-5xl drop-shadow-2xl rounded-2xl overflow-hidden border-4 border-purple-200">
@@ -398,7 +392,6 @@ export default function MyAdoptionsPage() {
             </div>
           </div>
 
-          {/* Paw Prints */}
           <div className="absolute top-8 left-8 text-violet-300 text-6xl opacity-60">
             🐾
           </div>
@@ -408,6 +401,7 @@ export default function MyAdoptionsPage() {
 
 
       </div>
+      <Footer />
     </div>
 
     
