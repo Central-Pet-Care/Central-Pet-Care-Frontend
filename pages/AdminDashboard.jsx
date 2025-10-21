@@ -4,6 +4,7 @@ import Sidebar from "../components/Sidebar";
 import AdminHeader from "../components/AdminHeader";
 import PaymentAdminDashboard from "./admin/PaymentAdminDashboard"; 
 import PaymentView from "./admin/PaymentView";
+import PaymentAnalytics from "./admin/PaymentAnalytics";
 import AdminServicesPage from "./admin/AdminServicesPage";
 import EditServicePage from "./admin/EditServicePage";
 import AddServicePage from "./admin/AddServicePage";
@@ -132,6 +133,7 @@ export default function AdminDashboard() {
 
             <Route path="payments" element={<PaymentAdminDashboard />} />
             <Route path="payment-view" element={<PaymentView />} />
+            <Route path="payment-analytics" element={<PaymentAnalytics />} />
             <Route path="/pets" element={<AdminPetsPage />} />
             <Route path="/pets/addPet" element={<AddPetPage />} />
             <Route path="/pets/medicalRecords" element={<HealthRecordsPage />} />

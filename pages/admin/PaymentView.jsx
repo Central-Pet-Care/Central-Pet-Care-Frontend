@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import ReceiptViewer from '../../components/ReceiptViewer';
 
 const PaymentView = () => {
   const location = useLocation();
@@ -24,6 +25,11 @@ const PaymentView = () => {
       </div>
     );
   }
+
+  // Debug: Log payment data to see what we have
+  console.log('Payment Data in View:', paymentData);
+  console.log('Bank Receipt ID:', paymentData.bankReceiptId);
+  console.log('Payment Type:', paymentData.payType);
 
   // Check if payment type requires manual approval
   const requiresManualApproval = () => {
@@ -192,6 +198,55 @@ const PaymentView = () => {
               </div>
             )}
           </div>
+
+          {/* Bank Receipt Viewer - Show for bank transfer payments */}
+          {requiresManualApproval() && paymentData.bankReceiptId && (
+            <div className="mt-6">
+              <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">Bank Transfer Receipt</h3>
+              <ReceiptViewer receiptId={paymentData.bankReceiptId} />
+            </div>
+          )}
+
+          {/* Show message if bank transfer but no receipt uploaded yet */}
+          {requiresManualApproval() && !paymentData.bankReceiptId && (
+            <div className="mt-6">
+              <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">Bank Transfer Receipt</h3>
+              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                <p className="text-yellow-800 font-medium">⚠️ No receipt uploaded yet</p>
+                <p className="text-yellow-700 text-sm mt-1">
+                  Customer has not uploaded bank transfer receipt. Please contact customer or wait for upload.
+                </p>
+                {/* Debug Info */}
+                <div className="mt-3 p-2 bg-white rounded text-xs font-mono">
+                  <p><strong>Debug Info:</strong></p>
+                  <p>Payment ID: {paymentData.id}</p>
+                  <p>Order ID: {paymentData.orderId}</p>
+                  <p>Bank Receipt ID: {String(paymentData.bankReceiptId || 'null')}</p>
+                  <p>Payment Type: {paymentData.payType}</p>
+                </div>
+
+                {/* Manual Link Receipt Option for Admin */}
+                <div className="mt-4 pt-4 border-t border-yellow-300">
+                  <p className="text-sm text-yellow-800 mb-2">
+                    <strong>Admin Action:</strong> If customer uploaded receipt but it's not showing, check MongoDB:
+                  </p>
+                  <div className="bg-gray-800 text-green-400 p-3 rounded font-mono text-xs overflow-x-auto whitespace-pre">
+{`// In MongoDB Compass or Shell:
+db.bankReceipts.files.find({ "metadata.orderId": "${paymentData.orderId}" })
+
+// Copy the _id from the result, then run:
+db.payments.updateOne(
+  { orderId: "${paymentData.orderId}" },
+  { $set: { bankReceiptId: ObjectId("PASTE_ID_HERE") } }
+)`}
+                  </div>
+                  <p className="text-xs text-yellow-700 mt-2">
+                    After updating, refresh this page to see the receipt.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Timeline - Keep this section for time tracking */}
           <h3 className="text-lg font-semibold text-gray-800 mt-6 mb-3 border-b pb-2">Timeline</h3>
