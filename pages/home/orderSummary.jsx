@@ -25,7 +25,7 @@ export default function OrderSummary() {
     const token = localStorage.getItem("token");
 
     try {
-      const res = await axios.get(`import.meta.env.VITE_BACKEND_URL/api/orders/${orderId}`, {
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/orders/${orderId}`, {
         headers: token ? { Authorization: `Bearer ${token}` } : {},
       });
       console.log("✅ Order fetched:", res.data);
@@ -48,7 +48,7 @@ export default function OrderSummary() {
     if (!window.confirm("Are you sure you want to delete this order?")) return;
 
     try {
-      await axios.delete(`import.meta.env.VITE_BACKEND_URL/api/orders/${orderId}`, {
+      await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/orders/${orderId}`, {
         headers: token ? { Authorization: `Bearer ${token}` } : {},
       });
       alert("Order deleted successfully!");
