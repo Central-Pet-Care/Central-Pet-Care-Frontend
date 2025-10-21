@@ -52,7 +52,7 @@ export default function AdminOrdersPage() {
     const token = localStorage.getItem("token");
     axios
       .put(
-        `import.meta.env.VITE_BACKEND_URL/api/orders/${orderId}`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/orders/${orderId}`,
         { status: newStatus },
         { headers: { Authorization: `Bearer ${token}` } }
       )
@@ -72,7 +72,7 @@ export default function AdminOrdersPage() {
 
     const token = localStorage.getItem("token");
     axios
-      .delete(`import.meta.env.VITE_BACKEND_URL/api/orders/${orderId}`, {
+      .delete(`${import.meta.env.VITE_BACKEND_URL}/api/orders/${orderId}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then(() => {
