@@ -181,10 +181,10 @@ export default function AdminPetsPage() {
                        const token = localStorage.getItem("token");
                        await axios.delete(
                      `${import.meta.env.VITE_BACKEND_URL}/api/pets/${pet.petId}`,
-                    {
-                      headers: { Authorization: `Bearer ${token}` },
+                      {
+                         headers: { Authorization: `Bearer ${token}` },
                         }
-                    );
+                        );
 
                             toast.success("Pet deleted successfully");
                             // Remove pet from state immediately
