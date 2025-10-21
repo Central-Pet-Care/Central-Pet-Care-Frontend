@@ -37,7 +37,7 @@ export default function AdminDashboard() {
     const fetchProducts = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get("http://localhost:5000/api/products", {
+        const res = await axios.get("import.meta.env.VITE_BACKEND_URL/api/products", {
           headers: { Authorization: `Bearer ${token}` },
         });
         setProductCount(res.data.List.length);
@@ -54,7 +54,7 @@ export default function AdminDashboard() {
     const fetchPets = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get("http://localhost:5000/api/pets", {
+        const res = await axios.get("import.meta.env.VITE_BACKEND_URL/api/pets", {
           headers: { Authorization: `Bearer ${token}` },
         });
         setPetCount(res.data.length);
@@ -71,7 +71,7 @@ export default function AdminDashboard() {
     const fetchOrders = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get("http://localhost:5000/api/orders", {
+        const res = await axios.get("import.meta.env.VITE_BACKEND_URL/api/orders", {
           headers: { Authorization: `Bearer ${token}` },
         });
         setOrderCount(res.data.orders?.length || 0);

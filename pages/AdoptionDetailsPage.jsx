@@ -27,7 +27,7 @@ export default function AdoptionDetailsPage() {
     const fetchAdoption = async () => {
       try {
         const { data } = await axios.get(
-          `http://localhost:5000/api/adoptions/${adoptionId}`
+          `import.meta.env.VITE_BACKEND_URL/api/adoptions/${adoptionId}`
         );
         setAdoption(data);
       } catch (error) {
@@ -45,7 +45,7 @@ export default function AdoptionDetailsPage() {
     try {
       const token = localStorage.getItem("token");
       await axios.delete(
-        `http://localhost:5000/api/adoptions/pet/${adoption.petId}`,
+        `import.meta.env.VITE_BACKEND_URL/api/adoptions/pet/${adoption.petId}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       toast.success("Adoption request canceled");

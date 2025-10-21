@@ -21,7 +21,7 @@ export default function AdminReviewPetsPage({ onPetApproved }) {
     try {
       setLoading(true);
       const res = await axios.get(
-        "http://localhost:5000/api/pets/pending/public",
+        "import.meta.env.VITE_BACKEND_URL/api/pets/pending/public",
         { headers: token ? { Authorization: `Bearer ${token}` } : {} }
       );
       setSubmissions(res.data || []);
@@ -47,14 +47,14 @@ export default function AdminReviewPetsPage({ onPetApproved }) {
       setLoading(true);
       if (action === "approved") {
         const res = await axios.put(
-          `http://localhost:5000/api/pets/${id}/approve`,
+          `import.meta.env.VITE_BACKEND_URL/api/pets/${id}/approve`,
           {},
           { headers: { Authorization: `Bearer ${token}` } }
         );
         toast.success("✅ Pet approved successfully");
         if (onPetApproved) onPetApproved(res.data);
       } else if (action === "rejected") {
-        await axios.delete(`http://localhost:5000/api/pets/${id}/reject`, {
+        await axios.delete(`import.meta.env.VITE_BACKEND_URL/api/pets/${id}/reject`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         toast.success("❌ Pet rejected and removed");

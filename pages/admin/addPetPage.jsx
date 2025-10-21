@@ -129,7 +129,7 @@ export default function AddPetPage() {
       const payload = { ...form, images: uploadedUrls.filter(Boolean) };
 
       // Send to backend
-      await axios.post("http://localhost:5000/api/pets", payload, {
+      await axios.post("import.meta.env.VITE_BACKEND_URL/api/pets", payload, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
 

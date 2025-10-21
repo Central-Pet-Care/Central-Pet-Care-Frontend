@@ -20,7 +20,7 @@ const PaymentAdminDashboard = () => {
       setLoading(true);
       setError(null);
 
-      const response = await fetch('http://localhost:5000/api/payments', {
+      const response = await fetch('import.meta.env.VITE_BACKEND_URL/api/payments', {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
       });
@@ -97,7 +97,7 @@ const PaymentAdminDashboard = () => {
 
   const handleStatusChange = async (id, newStatus) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/payments/${id}`, {
+      const response = await fetch(`import.meta.env.VITE_BACKEND_URL/api/payments/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus }),

@@ -17,7 +17,7 @@ export default function AdminProductsPage() {
       const token = localStorage.getItem("token");
 
       axios
-        .get("http://localhost:5000/api/products", {
+        .get("import.meta.env.VITE_BACKEND_URL/api/products", {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
         })
         .then((res) => {
@@ -202,7 +202,7 @@ export default function AdminProductsPage() {
 
                           axios
                             .delete(
-                              `http://localhost:5000/api/products/${product.productId}`,
+                              `import.meta.env.VITE_BACKEND_URL/api/products/${product.productId}`,
                               {
                                 headers: { Authorization: `Bearer ${token}` },
                               }

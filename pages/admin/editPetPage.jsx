@@ -106,7 +106,7 @@ export default function UpdatePetPage() {
 
     try {
       setLoading(true);
-      await axios.put(`http://localhost:5000/api/pets/${pet.petId}`, form, {
+      await axios.put(`import.meta.env.VITE_BACKEND_URL/api/pets/${pet.petId}`, form, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
       toast.success("🐾 Pet updated!");

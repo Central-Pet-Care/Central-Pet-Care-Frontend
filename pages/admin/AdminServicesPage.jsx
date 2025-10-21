@@ -18,7 +18,7 @@ export default function AdminServicesPage() {
 
   const fetchServices = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/service");
+      const res = await axios.get("import.meta.env.VITE_BACKEND_URL/api/service");
       setServices(res.data);
       setLoading(false);
     } catch (err) {
@@ -44,7 +44,7 @@ const handleDelete = async (id) => {
           <button
             onClick={async () => {
               try {
-                await axios.delete(`http://localhost:5000/api/service/${id}`, {
+                await axios.delete(`import.meta.env.VITE_BACKEND_URL/api/service/${id}`, {
                   headers: {
                     Authorization: `Bearer ${localStorage.getItem("token")}`,
                   },

@@ -116,7 +116,7 @@ export default function AddServicePage() {
     }
 
     try {
-      await axios.post("http://localhost:5000/api/service", formData, {
+      await axios.post("import.meta.env.VITE_BACKEND_URL/api/service", formData, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
 

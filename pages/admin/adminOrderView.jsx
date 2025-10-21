@@ -17,7 +17,7 @@ export default function AdminOrderView() {
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get(`http://localhost:5000/api/orders/${orderId}`, {
+      const res = await axios.get(`import.meta.env.VITE_BACKEND_URL/api/orders/${orderId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setOrder(res.data);
@@ -39,7 +39,7 @@ export default function AdminOrderView() {
 
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`http://localhost:5000/api/orders/${orderId}`, {
+      await axios.delete(`import.meta.env.VITE_BACKEND_URL/api/orders/${orderId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       toast.success("Order deleted successfully");

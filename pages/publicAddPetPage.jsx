@@ -133,7 +133,7 @@ export default function PublicAddPetPage() {
         images: uploadedUrls.filter(Boolean),
       };
 
-      const res = await axios.post("http://localhost:5000/api/pets", payload);
+      const res = await axios.post("import.meta.env.VITE_BACKEND_URL/api/pets", payload);
 
       toast.success(res.data.message || "Pet submitted for review!");
       setShowSuccess(true); // 🆕 show success screen

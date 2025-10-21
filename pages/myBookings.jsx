@@ -17,7 +17,7 @@ export default function MyBookings() {
     const token = localStorage.getItem("token");
     if (token) {
       axios
-        .get("http://localhost:5000/api/booking/user/me", {
+        .get("import.meta.env.VITE_BACKEND_URL/api/booking/user/me", {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -43,7 +43,7 @@ export default function MyBookings() {
 
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`http://localhost:5000/api/booking/${id}`, {
+      await axios.delete(`import.meta.env.VITE_BACKEND_URL/api/booking/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setBookings(bookings.filter((b) => b._id !== id));
@@ -59,7 +59,7 @@ export default function MyBookings() {
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        "http://localhost:5000/api/cart",
+        "import.meta.env.VITE_BACKEND_URL/api/cart",
         {
           serviceId: booking.serviceId?._id,
           bookingId: booking._id,

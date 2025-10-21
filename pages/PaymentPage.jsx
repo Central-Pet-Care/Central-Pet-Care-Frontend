@@ -28,7 +28,7 @@ const PaymentPage = () => {
   }
 
   try {
-    const response = await axios.get(`http://localhost:5000/api/payments/order/${orderId}`);
+    const response = await axios.get(`import.meta.env.VITE_BACKEND_URL/api/payments/order/${orderId}`);
     console.log("Fetched order response:", response.data); //  check structure in console
 
 
@@ -76,7 +76,7 @@ const handlePayment = async () => {
       };
     }
 
-    const response = await axios.post('http://localhost:5000/api/payments/process-direct', paymentPayload);
+    const response = await axios.post('import.meta.env.VITE_BACKEND_URL/api/payments/process-direct', paymentPayload);
 
   
     const resultData = {

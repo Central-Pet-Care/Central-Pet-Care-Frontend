@@ -61,7 +61,7 @@ const PaymentView = () => {
     
     try {
       // Call backend to update payment status
-      const response = await fetch(`http://localhost:5000/api/payments/${paymentData.id}`, {
+      const response = await fetch(`import.meta.env.VITE_BACKEND_URL/api/payments/${paymentData.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -106,7 +106,7 @@ const PaymentView = () => {
     
     try {
       // Call backend to delete payment
-      const response = await fetch(`http://localhost:5000/api/payments/${paymentData.id}`, {
+      const response = await fetch(`import.meta.env.VITE_BACKEND_URL/api/payments/${paymentData.id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

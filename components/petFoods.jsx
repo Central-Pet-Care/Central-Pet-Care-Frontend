@@ -12,7 +12,7 @@ export default function PetFoods() {
   useEffect(() => {
     // Load only pet foods for default view
     axios
-      .get("http://localhost:5000/api/products?category=CAT0001")
+      .get("import.meta.env.VITE_BACKEND_URL/api/products?category=CAT0001")
       .then((res) => {
         setProducts(res.data.List)
         setLoadingStatus("loaded")
@@ -25,7 +25,7 @@ export default function PetFoods() {
 
     // Load ALL products for searching
     axios
-      .get("http://localhost:5000/api/products")
+      .get("import.meta.env.VITE_BACKEND_URL/api/products")
       .then((res) => setAllProducts(res.data.List))
       .catch((err) =>
         console.error("Failed to fetch all products for search", err)

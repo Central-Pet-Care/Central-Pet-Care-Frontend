@@ -17,7 +17,7 @@ export default function AdminPetsPage() {
       const token = localStorage.getItem("token");
 
       axios
-        .get("http://localhost:5000/api/pets", {
+        .get("import.meta.env.VITE_BACKEND_URL/api/pets", {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
         })
         .then((res) => {
@@ -179,7 +179,7 @@ export default function AdminPetsPage() {
 
                           try {
                             const token = localStorage.getItem("token");
-                            await axios.delete(`http://localhost:5000/api/pets/${pet.petId}`, {
+                            await axios.delete(`import.meta.env.VITE_BACKEND_URL/api/pets/${pet.petId}`, {
                               headers: { Authorization: `Bearer ${token}` },
                             });
 

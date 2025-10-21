@@ -4,7 +4,7 @@ import { useParams, useNavigate, Link, useLocation } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
 
-const API_BASE = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+const API_BASE = import.meta.env.VITE_BACKEND_URL || "import.meta.env.VITE_BACKEND_URL";
 
 export default function AdoptionForm() {
   const { petId } = useParams();

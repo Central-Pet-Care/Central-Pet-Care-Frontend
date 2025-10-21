@@ -30,7 +30,7 @@ export default function MyAdoptionsPage() {
           return;
         }
 
-        const res = await axios.get("http://localhost:5000/api/adoptions/my", {
+        const res = await axios.get("import.meta.env.VITE_BACKEND_URL/api/adoptions/my", {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -40,7 +40,7 @@ export default function MyAdoptionsPage() {
           adoptionRequests.map(async (adoption) => {
             try {
               const petRes = await axios.get(
-                `http://localhost:5000/api/pets/${adoption.petId}`
+                `import.meta.env.VITE_BACKEND_URL/api/pets/${adoption.petId}`
               );
               return { ...adoption, petDetails: petRes.data };
             } catch (err) {
@@ -142,7 +142,7 @@ export default function MyAdoptionsPage() {
                   onClick={async () => {
                     try {
                       await axios.delete(
-                        `http://localhost:5000/api/adoptions/${adoption._id}`,
+                        `import.meta.env.VITE_BACKEND_URL/api/adoptions/${adoption._id}`,
                         {
                           headers: { Authorization: `Bearer ${token}` },
                         }

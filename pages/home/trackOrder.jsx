@@ -35,7 +35,7 @@ export default function OrderTrack() {
 
       try {
         // ✅ Fixed: use /api/orders/:orderId endpoint
-        const res = await axios.get(`http://localhost:5000/api/orders/${orderId}`, {
+        const res = await axios.get(`import.meta.env.VITE_BACKEND_URL/api/orders/${orderId}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
