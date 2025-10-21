@@ -41,7 +41,7 @@ export default function EditProductPage() {
     const fetchProduct = async () => {
       try {
         const token = localStorage.getItem("token");
-        const { data } = await axios.get(`${import.meta.env.VITE_BACKEND_UR}L/api/products/${productId}`, {
+        const { data } = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/products/${productId}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
