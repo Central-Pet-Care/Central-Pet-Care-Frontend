@@ -35,7 +35,7 @@ export default function AdminAdoptionsPage() {
       const body = { adoptionStatus: status };
 
       await axios.patch(
-        `import.meta.env.VITE_BACKEND_URL/api/adoptions/${adoptionId}/status`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/adoptions/${adoptionId}/status`,
         body,
         { headers: { Authorization: `Bearer ${token}` } }
       );
