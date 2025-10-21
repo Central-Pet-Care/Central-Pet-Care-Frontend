@@ -44,7 +44,7 @@ const handleDelete = async (id) => {
           <button
             onClick={async () => {
               try {
-                await axios.delete(`import.meta.env.VITE_BACKEND_URL/api/service/${id}`, {
+                await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/service/${id}`, {
                   headers: {
                     Authorization: `Bearer ${localStorage.getItem("token")}`,
                   },

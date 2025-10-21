@@ -35,7 +35,7 @@ export default function EditServicePage() {
   // ✅ Fetch service details
   useEffect(() => {
     axios
-      .get(`import.meta.env.VITE_BACKEND_URL/api/service/${id}`)
+      .get(`${import.meta.env.VITE_BACKEND_URL}/api/service/${id}`)
       .then((res) => {
         setFormData(res.data);
         setLoading(false);
@@ -106,7 +106,7 @@ export default function EditServicePage() {
     }
 
     try {
-      await axios.put(`import.meta.env.VITE_BACKEND_URL/api/service/${id}`, formData, {
+      await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/service/${id}`, formData, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
       toast.success("✅ Service updated successfully!");
@@ -121,7 +121,7 @@ export default function EditServicePage() {
   const handleDelete = async () => {
     if (window.confirm("❗ Are you sure you want to delete this service?")) {
       try {
-        await axios.delete(`import.meta.env.VITE_BACKEND_URL/api/service/${id}`, {
+        await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/service/${id}`, {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         });
         toast.success("🗑️ Service deleted successfully!");
