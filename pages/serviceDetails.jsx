@@ -22,12 +22,12 @@ export default function ServiceDetails() {
 
   useEffect(() => {
     axios
-      .get(`import.meta.env.VITE_BACKEND_URL/api/service/${id}`)
+      .get(`${import.meta.env.VITE_BACKEND_URL}/api/service/${id}`)
       .then((res) => {
         setService(res.data);
         // fetch related services
         axios
-          .get(`import.meta.env.VITE_BACKEND_URL/api/service`)
+          .get(`${import.meta.env.VITE_BACKEND_URL}/api/service`)
           .then((all) => {
             const filtered = all.data.filter(
               (s) => s._id !== res.data._id && s.category === res.data.category
