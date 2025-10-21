@@ -19,104 +19,98 @@ const PaymentPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch order data
-   const fetchOrderData = async () => {
-  if (!orderId) {
-    setError('No Order ID provided');
-    setLoading(false);
-    return;
-  }
-
-  try {
-    const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/payments/order/${orderId}`);
-    console.log("Fetched order response:", response.data); //  check structure in console
-
-
-    if (response.data.success) {
-      const order = response.data.order || response.data.data || response.data.orders;
-      setOrderData(order);
-    } else {
-      setError('Order not found');
-    }
-  } catch (error) {
-    console.error('Error:', error);
-    setError('Cannot connect to server');
-  } finally {
-    setLoading(false);
-  }
-};
-
-
+  // ✅ FIXED: define and call fetchOrderData INSIDE useEffect to avoid infinite loop
   useEffect(() => {
+    const fetchOrderData = async () => {
+      if (!orderId) {
+        setError('No Order ID provided');
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/payments/order/${orderId}`);
+        console.log("Fetched order response:", response.data); // check structure in console
+
+        if (response.data.success) {
+          const order = response.data.order || response.data.data || response.data.orders;
+          setOrderData(order);
+        } else {
+          setError('Order not found');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        setError('Cannot connect to server');
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchOrderData();
   }, [orderId]);
 
   // Process payment
-const handlePayment = async () => {
-  setProcessing(true);
+  const handlePayment = async () => {
+    setProcessing(true);
 
-  try {
-    const paymentPayload = {
-      orderId: orderId,
-      paymentMethod: paymentMethod
-    };
-
-
-    if (paymentMethod === 'payhere') {
-      if (!paymentData.cardNumber || !paymentData.expiryDate || !paymentData.cvv || !paymentData.cardholderName) {
-        alert('Please fill all card details');
-        setProcessing(false);
-        return;
-      }
-      paymentPayload.cardDetails = {
-        cardNumber: paymentData.cardNumber.replace(/\s/g, ''),
-        
-        cvv: paymentData.cvv,
-        cardholderName: paymentData.cardholderName
+    try {
+      const paymentPayload = {
+        orderId: orderId,
+        paymentMethod: paymentMethod
       };
+
+      if (paymentMethod === 'payhere') {
+        if (!paymentData.cardNumber || !paymentData.expiryDate || !paymentData.cvv || !paymentData.cardholderName) {
+          alert('Please fill all card details');
+          setProcessing(false);
+          return;
+        }
+        paymentPayload.cardDetails = {
+          cardNumber: paymentData.cardNumber.replace(/\s/g, ''),
+          cvv: paymentData.cvv,
+          cardholderName: paymentData.cardholderName
+        };
+      }
+
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/payments/process-direct`, paymentPayload);
+
+      const resultData = {
+        success: response.data.success,
+        orderId: orderId,
+        amount: orderData.totalAmount,
+        paymentMethod: paymentMethod,
+        message: response.data.message,
+        name: orderData.customerInfo?.name,
+        email: orderData.customerInfo?.email,
+        phone: orderData.customerInfo?.phone,
+        address: orderData.customerInfo?.address,
+        items: orderData.orderedItems
+      };
+
+      if (paymentMethod === 'payhere') {
+        resultData.transactionId = response.data.paymentId;
+        resultData.cardLast4 = response.data.data?.cardLast4;
+      } else if (paymentMethod === 'bank_transfer') {
+        resultData.bankDetails = response.data.bankDetails;
+      }
+
+      localStorage.setItem("paymentSuccess", JSON.stringify(resultData));
+      navigate('/PayConfo');
+
+    } catch (error) {
+      localStorage.setItem("paymentSuccess", JSON.stringify({
+        success: false,
+        orderId: orderId,
+        paymentMethod: paymentMethod,
+        error: error.response?.data?.message || 'Payment failed',
+        message: error.response?.data?.message || 'Payment system error'
+      }));
+
+      navigate('/PayConfo');
+    } finally {
+      setProcessing(false);
     }
-
-    const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/payments/process-direct`, paymentPayload);
-
-  
-    const resultData = {
-      success: response.data.success,
-      orderId: orderId,
-      amount: orderData.totalAmount,
-      paymentMethod: paymentMethod,
-      message: response.data.message,
-      name: orderData.customerInfo?.name,
-      email: orderData.customerInfo?.email,
-      phone: orderData.customerInfo?.phone,
-      address: orderData.customerInfo?.address,
-      items: orderData.orderedItems
-    };
-
-    if (paymentMethod === 'payhere') {
-      resultData.transactionId = response.data.paymentId;
-      resultData.cardLast4 = response.data.data?.cardLast4;
-    } else if (paymentMethod === 'bank_transfer') {
-      resultData.bankDetails = response.data.bankDetails;
-    }
-
-    localStorage.setItem("paymentSuccess", JSON.stringify(resultData));
-    navigate('/PayConfo');
-
-  } catch (error) {
-    localStorage.setItem("paymentSuccess", JSON.stringify({
-      success: false,
-      orderId: orderId,
-      paymentMethod: paymentMethod,
-      error: error.response?.data?.message || 'Payment failed',
-      message: error.response?.data?.message || 'Payment system error'
-    }));
-
-    navigate('/PayConfo');
-  } finally {
-    setProcessing(false);
-  }
-};
-
+  };
 
   if (loading) {
     return (
@@ -159,21 +153,19 @@ const handlePayment = async () => {
             {/* Customer Information */}
             <div className="bg-white rounded-lg shadow-lg p-6">
               <h2 className="text-xl font-bold text-purple-800 mb-4">Customer Information</h2>
-                 <div className="space-y-2 text-sm">
-                      <p><strong>Name:</strong> {orderData.customerInfo?.name}</p>
-                      <p><strong>Email:</strong> {orderData.customerInfo?.email}</p>
-                      <p><strong>Phone:</strong> {orderData.customerInfo?.phone}</p>
-                      <p><strong>Address:</strong> {orderData.customerInfo?.address}</p>
-                </div>
-
+              <div className="space-y-2 text-sm">
+                <p><strong>Name:</strong> {orderData.customerInfo?.name}</p>
+                <p><strong>Email:</strong> {orderData.customerInfo?.email}</p>
+                <p><strong>Phone:</strong> {orderData.customerInfo?.phone}</p>
+                <p><strong>Address:</strong> {orderData.customerInfo?.address}</p>
+              </div>
             </div>
 
             {/* Payment Method Selection */}
             <div className="bg-white rounded-lg shadow-lg p-6">
               <h2 className="text-xl font-bold text-purple-800 mb-4">Select Payment Method</h2>
-              
+
               <div className="space-y-3">
-                {/* PayHere Card */}
                 <label className="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
                   <input
                     type="radio"
@@ -189,7 +181,6 @@ const handlePayment = async () => {
                   </div>
                 </label>
 
-                {/* Cash on Delivery */}
                 <label className="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
                   <input
                     type="radio"
@@ -205,7 +196,6 @@ const handlePayment = async () => {
                   </div>
                 </label>
 
-                {/* Bank Transfer */}
                 <label className="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
                   <input
                     type="radio"
@@ -223,11 +213,10 @@ const handlePayment = async () => {
               </div>
             </div>
 
-            {/* Card Details (Only for PayHere) */}
             {paymentMethod === 'payhere' && (
               <div className="bg-white rounded-lg shadow-lg p-6">
                 <h3 className="text-lg font-bold text-purple-800 mb-4">Card Details</h3>
-                
+
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium mb-2">Card Number</label>
@@ -295,7 +284,6 @@ const handlePayment = async () => {
               </div>
             )}
 
-            {/* Bank Transfer Details */}
             {paymentMethod === 'bank_transfer' && (
               <div className="bg-white rounded-lg shadow-lg p-6">
                 <h3 className="text-lg font-bold text-purple-800 mb-4">Bank Transfer Details</h3>
@@ -307,14 +295,11 @@ const handlePayment = async () => {
                   </p>
                 </div>
 
-                {/* Bank Receipt Upload Component */}
                 <BankReceiptUpload 
                   orderId={orderId}
                   onUploadSuccess={(result) => {
                     console.log('Receipt uploaded successfully:', result);
                     alert('Receipt uploaded successfully! Admin will verify your payment within 24 hours.');
-                    // Optionally redirect to confirmation page
-                    // navigate('/order-confirmation');
                   }}
                 />
               </div>
@@ -332,7 +317,6 @@ const handlePayment = async () => {
               </div>
             </div>
 
-            {/* Items */}
             <div className="mb-6">
               <h3 className="font-semibold mb-3">Items ({orderData.orderedItems.length})</h3>
               <div className="space-y-2">
@@ -348,7 +332,6 @@ const handlePayment = async () => {
               </div>
             </div>
 
-            {/* Total */}
             <div className="border-t pt-4 mb-6">
               <div className="flex justify-between text-xl font-bold text-purple-800">
                 <span>Total Amount:</span>
@@ -356,7 +339,6 @@ const handlePayment = async () => {
               </div>
             </div>
 
-            {/* Pay Button */}
             <button
               onClick={handlePayment}
               disabled={processing}
