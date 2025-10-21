@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from "react-router-dom";
+import BankReceiptUpload from '../components/BankReceiptUpload';
 
 const PaymentPage = () => {
   const { orderId } = useParams();   // ✅ fix orderId
@@ -28,9 +29,9 @@ const PaymentPage = () => {
 
   try {
     const response = await axios.get(`http://localhost:5000/api/payments/order/${orderId}`);
-    console.log("Fetched order response:", response.data); // 👈 check structure in console
+    console.log("Fetched order response:", response.data); //  check structure in console
 
-    // Fix: backend එකේ structure check කරලා correct key use කරන්න
+
     if (response.data.success) {
       const order = response.data.order || response.data.data || response.data.orders;
       setOrderData(order);
@@ -51,7 +52,6 @@ const PaymentPage = () => {
   }, [orderId]);
 
   // Process payment
-     // Process payment
 const handlePayment = async () => {
   setProcessing(true);
 
@@ -61,7 +61,7 @@ const handlePayment = async () => {
       paymentMethod: paymentMethod
     };
 
-    // Add card details only for PayHere
+
     if (paymentMethod === 'payhere') {
       if (!paymentData.cardNumber || !paymentData.expiryDate || !paymentData.cvv || !paymentData.cardholderName) {
         alert('Please fill all card details');
@@ -70,8 +70,7 @@ const handlePayment = async () => {
       }
       paymentPayload.cardDetails = {
         cardNumber: paymentData.cardNumber.replace(/\s/g, ''),
-        expiryMonth: paymentData.expiryDate.split('/')[0],
-        expiryYear: `20${paymentData.expiryDate.split('/')[1]}`,
+        
         cvv: paymentData.cvv,
         cardholderName: paymentData.cardholderName
       };
@@ -79,7 +78,7 @@ const handlePayment = async () => {
 
     const response = await axios.post('http://localhost:5000/api/payments/process-direct', paymentPayload);
 
-    // ✅ FIX: customerInfo use karanna
+  
     const resultData = {
       success: response.data.success,
       orderId: orderId,
@@ -300,13 +299,24 @@ const handlePayment = async () => {
             {paymentMethod === 'bank_transfer' && (
               <div className="bg-white rounded-lg shadow-lg p-6">
                 <h3 className="text-lg font-bold text-purple-800 mb-4">Bank Transfer Details</h3>
-                <div className="bg-purple-50 p-4 rounded-lg">
+                <div className="bg-purple-50 p-4 rounded-lg mb-6">
                   <p className="text-lg font-bold text-purple-800">Account Number: 9535942775533</p>
                   <p className="text-purple-600">Bank Name: ABC Bank</p>
                   <p className="text-sm text-gray-600 mt-2">
                     Please transfer the exact amount and keep the receipt for verification.
                   </p>
                 </div>
+
+                {/* Bank Receipt Upload Component */}
+                <BankReceiptUpload 
+                  orderId={orderId}
+                  onUploadSuccess={(result) => {
+                    console.log('Receipt uploaded successfully:', result);
+                    alert('Receipt uploaded successfully! Admin will verify your payment within 24 hours.');
+                    // Optionally redirect to confirmation page
+                    // navigate('/order-confirmation');
+                  }}
+                />
               </div>
             )}
           </div>
