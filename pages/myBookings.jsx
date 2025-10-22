@@ -43,7 +43,7 @@ export default function MyBookings() {
 
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`import.meta.env.VITE_BACKEND_URL/api/booking/${id}`, {
+      await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/booking/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setBookings(bookings.filter((b) => b._id !== id));

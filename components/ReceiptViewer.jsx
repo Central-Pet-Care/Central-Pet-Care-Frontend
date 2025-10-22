@@ -16,7 +16,7 @@ const ReceiptViewer = ({ receiptId }) => {
       const token = localStorage.getItem('token');
       
       const response = await fetch(
-        `import.meta.env.VITE_BACKEND_URL/api/payments/receipt/${receiptId}/info`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/payments/receipt/${receiptId}/info`,
         {
           headers: {
             'Authorization': `Bearer ${token}`
@@ -43,7 +43,7 @@ const ReceiptViewer = ({ receiptId }) => {
       const token = localStorage.getItem('token');
       
       const response = await fetch(
-        `import.meta.env.VITE_BACKEND_URL/api/payments/receipt/${receiptId}`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/payments/receipt/${receiptId}`,
         {
           headers: {
             'Authorization': `Bearer ${token}`
