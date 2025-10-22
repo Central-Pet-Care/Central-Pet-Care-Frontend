@@ -1,4 +1,3 @@
-// src/pages/admin/AddServicePage.jsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -27,7 +26,7 @@ export default function AddServicePage() {
 
   const [errors, setErrors] = useState({});
 
-  // ✅ Validation function
+  //  Validation function
   const validateField = (name, value) => {
     let error = "";
 
@@ -57,7 +56,6 @@ export default function AddServicePage() {
 
       case "duration":
         if (!value) error = "Duration is required";
-        else if (isNaN(value)) error = "Duration must be a number";
         else if (value <= 0) error = "Duration must be greater than 0";
         break;
 
@@ -77,7 +75,7 @@ export default function AddServicePage() {
     return error;
   };
 
-  // ✅ Handle input change
+  //  Handle input change
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -86,7 +84,7 @@ export default function AddServicePage() {
     setErrors({ ...errors, [name]: errorMsg });
   };
 
-  // ✅ Handle image separately
+  //  Handle image separately
   const handleImageChange = (e) => {
     const value = e.target.value;
     setFormData({ ...formData, images: [value] });
@@ -95,7 +93,7 @@ export default function AddServicePage() {
     setErrors({ ...errors, images: errorMsg });
   };
 
-  // ✅ Submit form
+  //  Submit form
   const handleSubmit = async (e) => {
     e.preventDefault();
 

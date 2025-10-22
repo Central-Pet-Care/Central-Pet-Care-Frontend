@@ -1,10 +1,9 @@
-// src/pages/MyBookings.jsx
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Header from "../components/navBar";
 import Footer from "../components/footer";
-import { Trash, ShoppingCart, FileDown } from "lucide-react";
+import { Trash, FileDown } from "lucide-react";
 import toast from "react-hot-toast";
 import jsPDF from "jspdf";
 
@@ -54,6 +53,7 @@ export default function MyBookings() {
     }
   };
 
+  
   // ✅ Add to Cart
   const handleAddToCart = async (booking) => {
     try {
@@ -77,26 +77,130 @@ export default function MyBookings() {
   };
 
   // ✅ Generate PDF
-  const handleGeneratePdf = (booking) => {
-    const doc = new jsPDF();
+const handleGeneratePdf = (booking) => {
+  const doc = new jsPDF("p", "mm", "a4");
 
-    doc.setFontSize(20);
-    doc.text("Booking Confirmation", 20, 20);
+  // Modern Brand Colors (Lavender + Aqua + Slate)
+  const deepPurple = [94, 53, 177];
+  const accentAqua = [0, 180, 155];
+  const darkText = [40, 40, 50];
+  const lightGray = [150, 150, 150];
+  const dividerGray = [220, 220, 220];
+  const softBg = [245, 243, 255];
 
-    doc.setFontSize(12);
-    doc.text(`Booking ID: ${booking._id}`, 20, 40);
-    doc.text(`Service: ${booking.serviceId?.serviceName || "N/A"}`, 20, 50);
-    doc.text(`Price: Rs. ${booking.serviceId?.price || "N/A"}`, 20, 60);
-    doc.text(
-      `Date: ${new Date(booking.bookingDate).toLocaleDateString()}`,
-      20,
-      70
-    );
-    doc.text(`Status: ${booking.bookingStatus}`, 20, 80);
-    doc.text(`Email: ${booking.userEmail}`, 20, 90);
+  
+  //  GRADIENT HEADER (simulated)
+  doc.setFillColor(...deepPurple);
+  doc.rect(0, 0, 210, 40, "F");
 
-    doc.save(`booking_${booking._id}.pdf`);
+  // Optional logo
+  const logoUrl =
+    "https://fhuoudyottvtaawdswlz.supabase.co/storage/v1/object/public/images/Logo-new.jpg";
+  const img = new Image();
+  img.src = logoUrl;
+  img.onload = () => {
+    doc.addImage(img, "JPEG", 15, 10, 20, 20);
   };
+
+  // Title text
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(22);
+  doc.text("Central Pet Care", 105, 23, { align: "center" });
+
+  // Date
+  const now = new Date();
+  const dateStr = now.toLocaleDateString();
+  const timeStr = now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(10);
+  doc.text(`Generated on: ${dateStr} ${timeStr}`, 150, 32);
+
+  
+  // MAIN TITLE
+  doc.setFontSize(18);
+  doc.setTextColor(...deepPurple);
+  doc.setFont("helvetica", "bold");
+  doc.text("Booking Confirmation", 20, 58);
+
+  // Accent divider
+  doc.setDrawColor(...accentAqua);
+  doc.setLineWidth(1);
+  doc.line(20, 60, 190, 60);
+
+ 
+  // BOOKING DETAILS
+  const startY = 75;
+  const boxHeight = 80;
+  doc.setFillColor(...softBg);
+  doc.roundedRect(15, startY - 5, 180, boxHeight, 5, 5, "F");
+  doc.setDrawColor(...dividerGray);
+  doc.setLineWidth(0.3);
+  doc.roundedRect(15, startY - 5, 180, boxHeight, 5, 5);
+
+  const info = [
+    ["Booking ID", booking._id],
+    ["Service", booking.serviceId?.serviceName || "N/A"],
+    ["Price", `Rs. ${booking.serviceId?.price || "N/A"}`],
+    ["Date", new Date(booking.bookingDate).toLocaleDateString()],
+    ["Status", booking.bookingStatus],
+    ["Email", booking.userEmail],
+  ];
+
+  let y = startY + 10;
+  doc.setFontSize(12);
+  info.forEach(([label, value], i) => {
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(...deepPurple);
+    doc.text(`${label}:`, 25, y);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(...darkText);
+    doc.text(String(value), 70, y);
+    y += 12;
+
+    // Divider line between rows
+    if (i < info.length - 1) {
+      doc.setDrawColor(...dividerGray);
+      doc.setLineWidth(0.2);
+      doc.line(25, y - 5, 185, y - 5);
+    }
+  });
+
+  // THANK YOU SECTION
+  const thankY = y + 15;
+  doc.setFont("helvetica", "italic");
+  doc.setFontSize(12);
+  doc.setTextColor(...accentAqua);
+  doc.text("Thank you for booking with Central Pet Care!", 105, thankY, {
+    align: "center",
+  });
+
+  doc.setTextColor(...lightGray);
+  doc.text(
+    "We look forward to caring for your beloved pet with love and dedication 🐾",
+    105,
+    thankY + 8,
+    { align: "center" }
+  );
+
+  //FOOTER
+  doc.setDrawColor(...deepPurple);
+  doc.setLineWidth(0.6);
+  doc.line(20, 285, 190, 285);
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(10);
+  doc.setTextColor(...lightGray);
+  doc.text(
+    "Central Pet Care • www.centralpetcare.lk • +94 77 123 4567",
+    105,
+    292,
+    { align: "center" }
+  );
+
+  // ✅ SAVE PDF
+  doc.save(`CentralPetCare_Booking_${booking._id}.pdf`);
+};
 
   return (
     <>
@@ -231,13 +335,7 @@ export default function MyBookings() {
 
                   {booking.bookingStatus === "Confirmed" && (
                     <div className="mt-5 flex gap-3">
-                      <button
-                        onClick={() => handleAddToCart(booking)}
-                        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-purple-100 text-purple-800 font-medium hover:bg-purple-200 transition text-sm"
-                      >
-                        <ShoppingCart size={16} /> Add to Cart
-                      </button>
-
+                      
                       <button
                         onClick={() => handleGeneratePdf(booking)}
                         className="flex items-center gap-2 px-4 py-2 rounded-lg bg-green-100 text-green-800 font-medium hover:bg-green-200 transition text-sm"
