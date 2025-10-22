@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from "react-router-dom";
 import BankReceiptUpload from '../components/BankReceiptUpload';
 
 const PaymentPage = () => {
-  const { orderId } = useParams();   // ✅ fix orderId
+  const { orderId } = useParams();
   const navigate = useNavigate();
 
   const [orderData, setOrderData] = useState(null);
@@ -19,66 +19,93 @@ const PaymentPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // ✅ FIXED: define and call fetchOrderData INSIDE useEffect to avoid infinite loop
+  // Fetch order data
+  const fetchOrderData = async () => {
+    if (!orderId) {
+      setError('No Order ID provided');
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const response = await axios.get(`http://localhost:5000/api/payments/order/${orderId}`);
+      console.log("Fetched order response:", response.data);
+
+      if (response.data.success) {
+        const order = response.data.order || response.data.data || response.data.orders;
+        setOrderData(order);
+      } else {
+        setError('Order not found');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      setError('Cannot connect to server');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchOrderData = async () => {
-      if (!orderId) {
-        setError('No Order ID provided');
-        setLoading(false);
-        return;
-      }
-
-      try {
-        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/payments/order/${orderId}`);
-        console.log("Fetched order response:", response.data); // check structure in console
-
-        if (response.data.success) {
-          const order = response.data.order || response.data.data || response.data.orders;
-          setOrderData(order);
-        } else {
-          setError('Order not found');
-        }
-      } catch (error) {
-        console.error('Error:', error);
-        setError('Cannot connect to server');
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchOrderData();
   }, [orderId]);
+
+  // Memoized Bank Transfer Component
+  const BankReceiptComponent = useMemo(() => {
+    if (paymentMethod !== 'bank_transfer' || !orderData) return null;
+
+    return (
+      <div className="bg-white rounded-lg shadow-lg p-6">
+        <h3 className="text-lg font-bold text-purple-800 mb-4">Bank Transfer Details</h3>
+        <div className="bg-purple-50 p-4 rounded-lg mb-6">
+          <p className="text-lg font-bold text-purple-800">Account Number: 9535942775533</p>
+          <p className="text-purple-600">Bank Name: ABC Bank</p>
+          <p className="text-sm text-gray-600 mt-2">
+            Please transfer the exact amount and keep the receipt for verification.
+          </p>
+        </div>
+
+        <BankReceiptUpload 
+          key={orderId}
+          orderId={orderId}
+          onUploadSuccess={(result) => {
+            console.log('Receipt uploaded successfully:', result);
+            alert('Receipt uploaded successfully! Admin will verify your payment within 24 hours.');
+          }}
+        />
+      </div>
+    );
+  }, [paymentMethod, orderId, orderData]);
 
   // Process payment
   const handlePayment = async () => {
     setProcessing(true);
 
     try {
-      const paymentPayload = {
-        orderId: orderId,
-        paymentMethod: paymentMethod
-      };
+      const paymentPayload = { orderId, paymentMethod };
 
       if (paymentMethod === 'payhere') {
-        if (!paymentData.cardNumber || !paymentData.expiryDate || !paymentData.cvv || !paymentData.cardholderName) {
+        const { cardNumber, expiryDate, cvv, cardholderName } = paymentData;
+
+        if (!cardNumber || !expiryDate || !cvv || !cardholderName) {
           alert('Please fill all card details');
           setProcessing(false);
           return;
         }
+
         paymentPayload.cardDetails = {
-          cardNumber: paymentData.cardNumber.replace(/\s/g, ''),
-          cvv: paymentData.cvv,
-          cardholderName: paymentData.cardholderName
+          cardNumber: cardNumber.replace(/\s/g, ''),
+          cvv,
+          cardholderName
         };
       }
 
-      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/payments/process-direct`, paymentPayload);
+      const response = await axios.post('http://localhost:5000/api/payments/process-direct', paymentPayload);
 
       const resultData = {
         success: response.data.success,
-        orderId: orderId,
+        orderId,
         amount: orderData.totalAmount,
-        paymentMethod: paymentMethod,
+        paymentMethod,
         message: response.data.message,
         name: orderData.customerInfo?.name,
         email: orderData.customerInfo?.email,
@@ -96,12 +123,11 @@ const PaymentPage = () => {
 
       localStorage.setItem("paymentSuccess", JSON.stringify(resultData));
       navigate('/PayConfo');
-
     } catch (error) {
       localStorage.setItem("paymentSuccess", JSON.stringify({
         success: false,
-        orderId: orderId,
-        paymentMethod: paymentMethod,
+        orderId,
+        paymentMethod,
         error: error.response?.data?.message || 'Payment failed',
         message: error.response?.data?.message || 'Payment system error'
       }));
@@ -112,6 +138,7 @@ const PaymentPage = () => {
     }
   };
 
+  // Conditional rendering for loading/error
   if (loading) {
     return (
       <div className="min-h-screen bg-purple-100 flex items-center justify-center">
@@ -129,6 +156,23 @@ const PaymentPage = () => {
         <div className="bg-white p-8 rounded-lg shadow-lg text-center">
           <h2 className="text-xl font-bold text-red-600 mb-4">Error</h2>
           <p className="mb-4">{error}</p>
+          <button 
+            onClick={() => navigate('/')}
+            className="bg-purple-600 text-white py-2 px-4 rounded"
+          >
+            Back to Home
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!orderData) {
+    return (
+      <div className="min-h-screen bg-purple-100 flex items-center justify-center">
+        <div className="bg-white p-8 rounded-lg shadow-lg text-center">
+          <h2 className="text-xl font-bold text-purple-600 mb-4">No Order Data</h2>
+          <p className="mb-4">Unable to load order information</p>
           <button 
             onClick={() => navigate('/')}
             className="bg-purple-600 text-white py-2 px-4 rounded"
@@ -164,8 +208,8 @@ const PaymentPage = () => {
             {/* Payment Method Selection */}
             <div className="bg-white rounded-lg shadow-lg p-6">
               <h2 className="text-xl font-bold text-purple-800 mb-4">Select Payment Method</h2>
-
               <div className="space-y-3">
+                {/* PayHere Card */}
                 <label className="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
                   <input
                     type="radio"
@@ -181,6 +225,7 @@ const PaymentPage = () => {
                   </div>
                 </label>
 
+                {/* Cash on Delivery */}
                 <label className="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
                   <input
                     type="radio"
@@ -196,6 +241,7 @@ const PaymentPage = () => {
                   </div>
                 </label>
 
+                {/* Bank Transfer */}
                 <label className="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
                   <input
                     type="radio"
@@ -213,10 +259,10 @@ const PaymentPage = () => {
               </div>
             </div>
 
+            {/* Card Details (Only for PayHere) */}
             {paymentMethod === 'payhere' && (
               <div className="bg-white rounded-lg shadow-lg p-6">
                 <h3 className="text-lg font-bold text-purple-800 mb-4">Card Details</h3>
-
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium mb-2">Card Number</label>
@@ -226,10 +272,10 @@ const PaymentPage = () => {
                       value={paymentData.cardNumber}
                       onChange={(e) => {
                         const value = e.target.value.replace(/\s/g, '').replace(/(\d{4})/g, '$1 ').trim();
-                        setPaymentData({...paymentData, cardNumber: value});
+                        setPaymentData({ ...paymentData, cardNumber: value });
                       }}
                       className="w-full p-3 border rounded-lg"
-                      maxLength="19"
+                      maxLength={19}
                     />
                   </div>
 
@@ -242,24 +288,25 @@ const PaymentPage = () => {
                         value={paymentData.expiryDate}
                         onChange={(e) => {
                           let value = e.target.value.replace(/\D/g, '');
-                          if (value.length >= 2) {
+                          if (value.length > 2) {
                             value = value.substring(0, 2) + '/' + value.substring(2, 4);
                           }
-                          setPaymentData({...paymentData, expiryDate: value});
+                          setPaymentData({ ...paymentData, expiryDate: value });
                         }}
                         className="w-full p-3 border rounded-lg"
-                        maxLength="5"
+                        maxLength={5}
                       />
                     </div>
+
                     <div>
                       <label className="block text-sm font-medium mb-2">CVV</label>
                       <input
                         type="text"
                         placeholder="123"
                         value={paymentData.cvv}
-                        onChange={(e) => setPaymentData({...paymentData, cvv: e.target.value.replace(/\D/g, '')})}
+                        onChange={(e) => setPaymentData({ ...paymentData, cvv: e.target.value.replace(/\D/g, '') })}
                         className="w-full p-3 border rounded-lg"
-                        maxLength="4"
+                        maxLength={4}
                       />
                     </div>
                   </div>
@@ -270,7 +317,7 @@ const PaymentPage = () => {
                       type="text"
                       placeholder="John Doe"
                       value={paymentData.cardholderName}
-                      onChange={(e) => setPaymentData({...paymentData, cardholderName: e.target.value})}
+                      onChange={(e) => setPaymentData({ ...paymentData, cardholderName: e.target.value })}
                       className="w-full p-3 border rounded-lg"
                     />
                   </div>
@@ -284,32 +331,14 @@ const PaymentPage = () => {
               </div>
             )}
 
-            {paymentMethod === 'bank_transfer' && (
-              <div className="bg-white rounded-lg shadow-lg p-6">
-                <h3 className="text-lg font-bold text-purple-800 mb-4">Bank Transfer Details</h3>
-                <div className="bg-purple-50 p-4 rounded-lg mb-6">
-                  <p className="text-lg font-bold text-purple-800">Account Number: 9535942775533</p>
-                  <p className="text-purple-600">Bank Name: ABC Bank</p>
-                  <p className="text-sm text-gray-600 mt-2">
-                    Please transfer the exact amount and keep the receipt for verification.
-                  </p>
-                </div>
-
-                <BankReceiptUpload 
-                  orderId={orderId}
-                  onUploadSuccess={(result) => {
-                    console.log('Receipt uploaded successfully:', result);
-                    alert('Receipt uploaded successfully! Admin will verify your payment within 24 hours.');
-                  }}
-                />
-              </div>
-            )}
+            {/* Bank Transfer Details */}
+            {BankReceiptComponent}
           </div>
 
           {/* RIGHT - Order Summary */}
           <div className="bg-white rounded-lg shadow-lg p-6">
             <h2 className="text-xl font-bold text-purple-800 mb-4">Order Summary</h2>
-            
+
             <div className="space-y-4 mb-6">
               <div className="flex justify-between">
                 <span>Order ID:</span>
@@ -317,6 +346,7 @@ const PaymentPage = () => {
               </div>
             </div>
 
+            {/* Items */}
             <div className="mb-6">
               <h3 className="font-semibold mb-3">Items ({orderData.orderedItems.length})</h3>
               <div className="space-y-2">
@@ -332,6 +362,7 @@ const PaymentPage = () => {
               </div>
             </div>
 
+            {/* Total */}
             <div className="border-t pt-4 mb-6">
               <div className="flex justify-between text-xl font-bold text-purple-800">
                 <span>Total Amount:</span>
@@ -339,6 +370,7 @@ const PaymentPage = () => {
               </div>
             </div>
 
+            {/* Pay Button */}
             <button
               onClick={handlePayment}
               disabled={processing}
@@ -353,11 +385,10 @@ const PaymentPage = () => {
                   <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
                   Processing...
                 </div>
-              ) : (
-                paymentMethod === 'cod' ? 'Confirm Order (COD)' :
+              ) : paymentMethod === 'cod' ? 'Confirm Order (COD)' :
                 paymentMethod === 'bank_transfer' ? 'Get Bank Details' :
                 `Pay LKR ${orderData.totalAmount.toFixed(2)}`
-              )}
+              }
             </button>
           </div>
         </div>
