@@ -44,7 +44,7 @@ const navigate = useNavigate(); // <-- 🆕 useNavigate hook
   // Fetch services
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/service")
+      .get(import.meta.env.VITE_BACKEND_URL + "/api/service")
       .then((res) => setServices(res.data))
       .catch((err) =>
         console.error("Error fetching services:", err.response?.data || err)
@@ -133,7 +133,7 @@ const navigate = useNavigate(); // <-- 🆕 useNavigate hook
 
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.post("http://localhost:5000/api/booking", formData, {
+      const res = await axios.post(import.meta.env.VITE_BACKEND_URL + "/api/booking", formData, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

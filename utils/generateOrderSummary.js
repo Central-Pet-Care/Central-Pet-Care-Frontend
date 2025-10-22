@@ -4,11 +4,11 @@ import autoTable from "jspdf-autotable";
 export default async function generateOrderForm(order) {
   const doc = new jsPDF("p", "mm", "a4");
 
-  // 🎨 Theme colors
+
   const purple = [125, 78, 172];
   const lightPurple = [242, 235, 250];
 
-  // ========== Company Header ==========
+  
   const logoUrl =
     "https://fhuoudyottvtaawdswlz.supabase.co/storage/v1/object/public/images/Logo-new.jpg";
 
@@ -34,7 +34,7 @@ export default async function generateOrderForm(order) {
   doc.setFont("helvetica", "normal");
   doc.text("Central Pet Care", 105, 28, { align: "center" });
 
-  // ========== Order Details ==========
+  
   const orderId = order.orderId || "N/A";
   const orderDate = order.createdAt
     ? new Date(order.createdAt).toLocaleDateString()
@@ -45,7 +45,7 @@ export default async function generateOrderForm(order) {
   doc.text(`Order No: ${orderId}`, 160, 20);
   doc.text(`Date: ${orderDate}`, 160, 28);
 
-  // ========== Customer Info ==========
+ 
   const customerName = order.name || "N/A";
   const customerEmail = order.email || "N/A";
   const customerPhone = order.phone || "N/A";
@@ -62,7 +62,7 @@ export default async function generateOrderForm(order) {
   doc.text(customerEmail, 15, 63);
   doc.text(customerPhone, 15, 69);
 
-  // Ship To (same as address field in your order)
+  // Ship To 
   doc.setFont("helvetica", "bold");
   doc.setTextColor(...purple);
   doc.text("Ship To:", 110, 50);
@@ -73,7 +73,7 @@ export default async function generateOrderForm(order) {
   doc.text(customerAddress, 110, 63);
   doc.text(customerPhone, 110, 69);
 
-  // ========== Items Table ==========
+ 
   const tableData = order.orderedItems.map((item) => [
     item.quantity,
     item.name,
@@ -108,7 +108,7 @@ export default async function generateOrderForm(order) {
     },
   });
 
-  // ========== Totals ==========
+  
   let finalY = doc.lastAutoTable.finalY + 10;
   doc.setFont("helvetica", "normal");
   doc.text("Subtotal:", 140, finalY);
@@ -119,7 +119,7 @@ export default async function generateOrderForm(order) {
   doc.text("TOTAL:", 140, finalY + 8);
   doc.text(`Rs.${order.totalAmount}`, 190, finalY + 8, { align: "right" });
 
-  // ========== Signature ==========
+ 
   doc.setDrawColor(180, 180, 180);
   doc.line(20, 260, 80, 260);
   doc.setFontSize(11);
@@ -127,7 +127,7 @@ export default async function generateOrderForm(order) {
   doc.setTextColor(100, 100, 100);
   doc.text("Authorized Signature", 25, 266);
 
-  // ========== Footer ==========
+ 
   doc.setFont("helvetica", "italic");
   doc.setFontSize(12);
   doc.setTextColor(...purple);

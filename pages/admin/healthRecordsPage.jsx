@@ -57,7 +57,7 @@ export default function HealthRecordsPage() {
       setLoading(true);
       const token = localStorage.getItem("token");
       const updatedPet = await axios.patch(
-        `http://localhost:5000/api/pets/${pet.petId}/healthRecords`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/pets/${pet.petId}/healthRecords`,
         { record: newRecord },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -78,7 +78,7 @@ export default function HealthRecordsPage() {
       setLoading(true);
       const token = localStorage.getItem("token");
       const updatedPet = await axios.delete(
-        `http://localhost:5000/api/pets/${pet.petId}/healthRecords/${index}`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/pets/${pet.petId}/healthRecords/${index}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setRecords(updatedPet.data.healthRecords);

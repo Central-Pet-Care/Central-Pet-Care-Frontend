@@ -1,20 +1,24 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { BsEye } from "react-icons/bs";
 import { FaTrash, FaSync } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+
 
 export default function AdminOrdersPage() {
   const [orders, setOrders] = useState([]);
   const [ordersLoaded, setOrdersLoaded] = useState(false);
   const [search, setSearch] = useState("");
-  const [selectedStatus, setSelectedStatus] = useState("all"); // 🆕 status filter state
+  const [selectedStatus, setSelectedStatus] = useState("all"); 
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!ordersLoaded) {
       const token = localStorage.getItem("token");
 
       axios
-        .get("http://localhost:5000/api/orders", {
+        .get(import.meta.env.VITE_BACKEND_URL + "/api/orders", {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
         })
         .then((res) => {
@@ -29,7 +33,7 @@ export default function AdminOrdersPage() {
     }
   }, [ordersLoaded]);
 
-  // 🔍 Filter Orders
+  //  Filter Orders
   const filteredOrders = orders.filter((o) => {
     const matchesSearch =
       o.orderId?.toLowerCase().includes(search.toLowerCase()) ||
@@ -43,12 +47,12 @@ export default function AdminOrdersPage() {
     return matchesSearch && matchesStatus;
   });
 
-  // 🟢 Update Order Status
+  //  Update Order Status
   const updateStatus = (orderId, newStatus) => {
     const token = localStorage.getItem("token");
     axios
       .put(
-        `http://localhost:5000/api/orders/${orderId}`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/orders/${orderId}`,
         { status: newStatus },
         { headers: { Authorization: `Bearer ${token}` } }
       )
@@ -62,13 +66,13 @@ export default function AdminOrdersPage() {
       });
   };
 
-  // 🗑️ Delete Order
+  //  Delete Order
   const deleteOrder = (orderId) => {
     if (!window.confirm("Are you sure you want to delete this order?")) return;
 
     const token = localStorage.getItem("token");
     axios
-      .delete(`http://localhost:5000/api/orders/${orderId}`, {
+      .delete(`${import.meta.env.VITE_BACKEND_URL}/api/orders/${orderId}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then(() => {
@@ -87,42 +91,37 @@ export default function AdminOrdersPage() {
         📦 Admin Order Management
       </h1>
 
-      {/* 🔍 Search */}
-     {/* 🔍 Search + Status Buttons ekama row ekata */}
-<div className="flex justify-between items-center gap-4 mb-6">
- 
-  {/* Search Bar */}
-  <input
-    type="text"
-    placeholder="Search by Order ID or Email..."
-    value={search}
-    onChange={(e) => setSearch(e.target.value)}
-    className="border p-2 rounded w-1/3 focus:ring focus:ring-indigo-300"
-  />
+      {/* Search + Status Buttons */}
+      <div className="flex justify-between items-center gap-4 mb-6 flex-wrap">
+        <input
+          type="text"
+          placeholder="Search by Order ID or Email..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="border p-2 rounded w-72 focus:ring focus:ring-indigo-300"
+        />
 
-  {/* 🆕 Status Filter Buttons */}
-  <div className="flex flex-wrap gap-2">
-    {["all", "preparing", "processing", "shipped", "delivered", "cancelled"].map(
-      (status) => (
-        <button
-          key={status}
-          onClick={() => setSelectedStatus(status)}
-          className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 
-          ${
-            selectedStatus === status
-              ? "bg-purple-600 text-white shadow-md"
-              : "bg-white text-purple-700 border border-purple-300 hover:bg-purple-100"
-          }`}
-        >
-          {status === "all"
-            ? "All Status"
-            : status.charAt(0).toUpperCase() + status.slice(1)}
-        </button>
-      )
-    )}
-  </div>
-</div>
-
+        <div className="flex flex-wrap gap-2">
+          {["all", "preparing", "processing", "shipped", "delivered", "cancelled"].map(
+            (status) => (
+              <button
+                key={status}
+                onClick={() => setSelectedStatus(status)}
+                className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 
+                  ${
+                    selectedStatus === status
+                      ? "bg-purple-600 text-white shadow-md"
+                      : "bg-white text-purple-700 border border-purple-300 hover:bg-purple-100"
+                  }`}
+              >
+                {status === "all"
+                  ? "All Status"
+                  : status.charAt(0).toUpperCase() + status.slice(1)}
+              </button>
+            )
+          )}
+        </div>
+      </div>
 
       {ordersLoaded ? (
         <div className="overflow-x-auto shadow-lg rounded-lg">
@@ -168,7 +167,7 @@ export default function AdminOrdersPage() {
                       {new Date(order.createdAt).toLocaleDateString()}
                     </td>
                     <td className="px-6 py-4 text-center flex justify-center gap-4">
-                      {/* 🔄 Refresh Status */}
+                      {/* Refresh Status */}
                       <button
                         className="text-blue-500 hover:text-blue-700 transition"
                         title="Refresh Status"
@@ -177,7 +176,7 @@ export default function AdminOrdersPage() {
                         <FaSync />
                       </button>
 
-                      {/* 🗑️ Delete */}
+                      {/* Delete */}
                       <button
                         className="text-red-500 hover:text-red-700 transition"
                         title="Delete"
@@ -185,6 +184,15 @@ export default function AdminOrdersPage() {
                       >
                         <FaTrash />
                       </button>
+
+                      {/* View Order */}
+                      <button
+  className="text-purple-600 hover:text-purple-800 transition"
+  title="View Order"
+  onClick={() => navigate(`/admin/order/${order.orderId}`)}
+>
+  <BsEye />
+</button>
                     </td>
                   </tr>
                 ))

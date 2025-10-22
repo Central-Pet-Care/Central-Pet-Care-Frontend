@@ -17,7 +17,7 @@ export default function AdminAdoptionViewPage() {
       try {
         const token = localStorage.getItem("token");
         const res = await axios.get(
-          `http://localhost:5000/api/adoptions/pet/${petId}`,
+          `${import.meta.env.VITE_BACKEND_URL}/api/adoptions/pet/${petId}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -35,7 +35,7 @@ export default function AdminAdoptionViewPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-200 via-blue-100 to-white p-8">
       <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-2xl overflow-hidden">
-        {/* Header */}
+        
         <div className="bg-gradient-to-r from-purple-600 to-blue-500 p-6">
           <h1 className="text-3xl font-bold text-white flex items-center gap-3">
             <FaClipboardList className="bg-white/20 p-2 rounded-full" size={40} />
@@ -44,7 +44,7 @@ export default function AdminAdoptionViewPage() {
         </div>
 
         <div className="p-8 space-y-8">
-          {/* Pet Image */}
+          
           <div className="flex justify-center">
             <div className="relative w-72 h-72 rounded-2xl overflow-hidden shadow-lg border-4 border-purple-200">
               <img
@@ -58,7 +58,7 @@ export default function AdminAdoptionViewPage() {
             </div>
           </div>
 
-          {/* Pet Details */}
+         
           <div className="bg-purple-50 rounded-xl shadow-md p-6">
             <h2 className="text-xl font-semibold text-purple-700 mb-4 flex items-center gap-2">
               <FaPaw className="bg-purple-200 p-2 rounded-full text-purple-700" size={36} />
@@ -87,7 +87,7 @@ export default function AdminAdoptionViewPage() {
             </p>
           </div>
 
-          {/* User Details */}
+          
           <div className="bg-blue-50 rounded-xl shadow-md p-6">
             <h2 className="text-xl font-semibold text-blue-700 mb-4 flex items-center gap-2">
               <FaUser className="bg-blue-200 p-2 rounded-full text-blue-700" size={36} />
@@ -100,7 +100,7 @@ export default function AdminAdoptionViewPage() {
             <p><strong>Alternate Email:</strong> {adoption.alternateEmail || "N/A"}</p>
           </div>
 
-          {/* Adoption Info */}
+         
           <div className="bg-green-50 rounded-xl shadow-md p-6">
             <h2 className="text-xl font-semibold text-green-700 mb-4 flex items-center gap-2">
               <FaClipboardList className="bg-green-200 p-2 rounded-full text-green-700" size={36} />
@@ -117,21 +117,19 @@ export default function AdminAdoptionViewPage() {
                       ? "bg-red-200 text-red-800"
                       : adoption.adoptionStatus === "Completed"
                       ? "bg-blue-200 text-blue-800"
-                      : "bg-yellow-200 text-yellow-800" // Pending or fallback
+                      : "bg-yellow-200 text-yellow-800" 
                   }`}
               >
                 {adoption.adoptionStatus}
               </span>
             </p>
 
-            {/* Rejection reason */}
             {adoption.adoptionStatus === "Rejected" && (
               <p className="mt-2 text-red-600">
                 <strong>Rejection Reason:</strong> {adoption.rejectionReason}
               </p>
             )}
 
-            {/* Dates */}
             <p><strong>Applied Date:</strong> {new Date(adoption.createdAt).toLocaleDateString()}</p>
             {adoption.adoptionStatus === "Completed" && (
               <p><strong>Adopted Date:</strong> {adoption.adoptionDate
@@ -141,9 +139,38 @@ export default function AdminAdoptionViewPage() {
 
             <p><strong>Home Environment:</strong> {adoption.homeEnvironment}</p>
             <p><strong>Experience:</strong> {adoption.experience}</p>
+
+            {/* 🧠 NEW AI MATCH SCORE PART */}
+            <div className="mt-4">
+              <p className="text-lg font-semibold text-green-800">
+                🧠 AI Match Score:{" "}
+                <span
+                  className={`font-bold ${
+                    adoption.matchScore >= 80
+                      ? "text-green-600"
+                      : adoption.matchScore >= 50
+                      ? "text-yellow-600"
+                      : "text-red-600"
+                  }`}
+                >
+                  {adoption.matchScore ? `${adoption.matchScore.toFixed(1)}%` : "N/A"}
+                </span>
+              </p>
+              <div className="w-full bg-gray-200 rounded-full h-3 mt-2">
+                <div
+                  className={`h-3 rounded-full ${
+                    adoption.matchScore >= 80
+                      ? "bg-green-500"
+                      : adoption.matchScore >= 50
+                      ? "bg-yellow-500"
+                      : "bg-red-500"
+                  }`}
+                  style={{ width: `${adoption.matchScore || 0}%` }}
+                ></div>
+              </div>
+            </div>
           </div>
 
-          {/* Go Back Button */}
           <div className="flex justify-center">
             <Link
               to="/admin/adoptions"

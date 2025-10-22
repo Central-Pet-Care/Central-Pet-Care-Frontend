@@ -7,6 +7,7 @@ import PetHero from "../components/petHero";
 import AdoptionHighlights from "../components/petHighlights";
 import PetsCategories from "../components/petsCategory";
 import PetFooter from "../components/petFooter";
+import Footer from "../components/footer";
 
 
 export default function AllPetsPage() {
@@ -18,7 +19,7 @@ export default function AllPetsPage() {
   useEffect(() => {
     async function fetchPets() {
       try {
-        const res = await axios.get("http://localhost:5000/api/pets");
+        const res = await axios.get(import.meta.env.VITE_BACKEND_URL + "/api/pets");
         setPets(res.data);
       } catch (err) {
         console.error("Error fetching pets:", err);
@@ -32,7 +33,7 @@ export default function AllPetsPage() {
   const navigate = useNavigate();
 
 
-  // 🔎 Filter pets based on search and category (client-side only)
+  // 🔎 Filter pets based on search and category
   const filteredPets = pets.filter((pet) => {
     const matchesCategory =
       selectedCategory === "all" ||
@@ -154,7 +155,7 @@ export default function AllPetsPage() {
        {/* ✅ Add Pet Button (Public Users) */}
       <div className="flex justify-end mb-6">
         <button
-          onClick={() => navigate("/add-pet")} // ✅ Go to PublicAddPetPage
+          onClick={() => navigate("/add-pet")} // Go to PublicAddPetPage
           className="flex items-center gap-2 px-5 py-2 bg-green-600 text-white font-semibold rounded-full shadow-md hover:bg-green-700 hover:shadow-lg transition"
         >
           <span className="text-lg">➕</span> Add a Pet
@@ -193,8 +194,10 @@ export default function AllPetsPage() {
         </div>
           
           <PetFooter/>
+          
 
       </div>
+      <Footer/>
     </div>
   );
 }

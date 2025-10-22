@@ -27,7 +27,7 @@ export default function AdoptionDetailsPage() {
     const fetchAdoption = async () => {
       try {
         const { data } = await axios.get(
-          `http://localhost:5000/api/adoptions/${adoptionId}`
+          `${import.meta.env.VITE_BACKEND_URL}/api/adoptions/${adoptionId}`
         );
         setAdoption(data);
       } catch (error) {
@@ -45,7 +45,7 @@ export default function AdoptionDetailsPage() {
     try {
       const token = localStorage.getItem("token");
       await axios.delete(
-        `http://localhost:5000/api/adoptions/pet/${adoption.petId}`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/adoptions/pet/${adoption.petId}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       toast.success("Adoption request canceled");
@@ -64,10 +64,8 @@ export default function AdoptionDetailsPage() {
 
   const pet = adoption.petDetails;
 
-  // ✅ Normalize status
   const status = adoption.adoptionStatus?.toUpperCase();
 
-  // ✅ Define steps dynamically
   const steps =
     status === "REJECTED"
       ? ["APPLIED", "PENDING", "REJECTED"]
@@ -124,7 +122,7 @@ export default function AdoptionDetailsPage() {
           </div>
         )}
 
-        {/* ✅ Adoption Info */}
+        {/* Adoption Info */}
         <div className="bg-gradient-to-r from-purple-50 via-pink-50 to-purple-100 border border-purple-200 rounded-2xl shadow-md p-6 mb-8">
           <h3 className="text-lg font-bold text-purple-800 mb-3 flex items-center gap-2">
             <FaInfoCircle className="text-purple-600" /> Adoption Info
@@ -161,13 +159,11 @@ export default function AdoptionDetailsPage() {
           )}
         </div>
 
-        {/* ✅ Step Progress Bar */}
         <div className="w-full mb-6 relative">
           <h3 className="text-lg font-semibold text-purple-800 mb-4">
             Adoption Progress
           </h3>
 
-          {/* Connecting line */}
           <div className="absolute left-22 right-22 top-15 -translate-y-1/2 h-1 bg-gray-300 z-0">
             <div
               className="h-1 bg-purple-700 transition-all duration-500"
@@ -181,7 +177,6 @@ export default function AdoptionDetailsPage() {
             ></div>
           </div>
 
-          {/* Steps */}
           <div className="flex items-center justify-between relative z-10">
             {steps.map((step, index) => {
               const isActive = index <= currentStepIndex;
@@ -209,7 +204,6 @@ export default function AdoptionDetailsPage() {
           </div>
         </div>
 
-        {/* Buttons */}
         <div className="flex flex-wrap justify-center gap-4 mt-8">
           <Link
             to="/adoptions"
@@ -218,7 +212,6 @@ export default function AdoptionDetailsPage() {
             ← Go Back
           </Link>
 
-          {/* Cancel Button */}
           {status === "PENDING" && (
             <button
               onClick={handleCancel}
@@ -228,7 +221,6 @@ export default function AdoptionDetailsPage() {
             </button>
           )}
 
-          {/* ✅ Edit Request Button (now using petId) */}
           {status === "PENDING" && (
             <Link
               to={`/adopt/${adoption.petId}/edit`}
@@ -238,7 +230,6 @@ export default function AdoptionDetailsPage() {
             </Link>
           )}
 
-          {/* ✅ Download Certificate Button */}
           {status === "COMPLETED" && (
             <button
               onClick={() => generateAdoptionCertificate(adoption)}

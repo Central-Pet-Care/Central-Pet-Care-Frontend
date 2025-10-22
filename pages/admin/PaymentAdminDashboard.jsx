@@ -20,7 +20,7 @@ const PaymentAdminDashboard = () => {
       setLoading(true);
       setError(null);
 
-      const response = await fetch('http://localhost:5000/api/payments', {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/payments`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
       });
@@ -44,6 +44,8 @@ const PaymentAdminDashboard = () => {
             ? 'PayHere Direct'
             : p.method === 'credit_card'
             ? 'Credit Card'
+            : p.method === 'bank_transfer'
+            ? 'bank_transfer'
             : p.paymentDetails?.paymentMethod || p.method || 'N/A',
         status: p.status || 'pending',
         cardLast4: p.paymentDetails?.cardLast4 || '',
@@ -52,6 +54,9 @@ const PaymentAdminDashboard = () => {
         paymentDate: p.paymentDate,
         city: p.customerInfo?.city || '',
         items: p.items || [],
+        bankReceiptId: p.bankReceiptId || null,
+        bankReceiptFilename: p.bankReceiptFilename || '',
+        bankDetails: p.bankDetails || null,
       }));
 
       setPayments(transformed);
@@ -92,7 +97,7 @@ const PaymentAdminDashboard = () => {
 
   const handleStatusChange = async (id, newStatus) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/payments/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/payments/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus }),
@@ -155,6 +160,12 @@ const PaymentAdminDashboard = () => {
             className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-medium"
           >
             📄 Generate PDF Report
+          </button>
+          <button
+            onClick={() => navigate('/admin/payment-analytics')}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium"
+          >
+            📊 Analytics
           </button>
           <button
             onClick={handleRefresh}

@@ -9,6 +9,7 @@ import Header from "../../components/navBar";
 import RecommendedProducts from "../../components/RecommendProducts";
 import ShippingInfo from "../../components/shoppingInfo";
 import Footer from "../../components/footer";
+import { BsClockHistory } from "react-icons/bs";
 
 export default function ProductOverview() {
   const params = useParams();
@@ -20,9 +21,12 @@ export default function ProductOverview() {
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState("description");
 
+  // 🔹 Load user info for order history button
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/products/" + productId)
+      .get(import.meta.env.VITE_BACKEND_URL + "/api/products/" + productId)
       .then((res) => {
         if (res.data && res.data.product) {
           setProduct(res.data.product);
@@ -46,7 +50,7 @@ export default function ProductOverview() {
     <>
       <Header />
 
-      <div className="w-full min-h-[calc(100vh-100px)] bg-gradient-to-r from-violet-100 via-violet-200 to-violet-100 py-10">
+      <div className="w-full min-h-[calc(100vh-100px)] bg-gradient-to-r from-violet-100 via-violet-200 to-violet-100 py-10 relative">
         <div className="max-w-6xl mx-auto px-4">
           {/* 🔙 Back Button */}
           <button
@@ -235,7 +239,17 @@ export default function ProductOverview() {
             </div>
           )}
         </div>
+
+        <div className="fixed bottom-8 right-8 flex flex-col gap-3 z-50">
+          <button
+            onClick={() => navigate(`/orders/${user.email}`)}
+            className="flex items-center gap-2 bg-gradient-to-r from-purple-600 to-green-500 text-white px-5 py-3 rounded-full shadow-md hover:scale-105 hover:shadow-lg transition-all"
+          >
+            <BsClockHistory className="text-lg" /> View Order History
+          </button>
+        </div>
       </div>
+
       <RecommendedProducts />
       <ShippingInfo />
       <Footer />

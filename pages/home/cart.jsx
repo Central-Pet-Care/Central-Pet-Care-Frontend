@@ -20,7 +20,7 @@ export default function Cart() {
       try {
         const ids = cart.map((c) => c.productId);
         const res = await axios.post(
-          "http://localhost:5000/api/products/cart-products",
+          import.meta.env.VITE_BACKEND_URL + "/api/products/cart-products",
           { ids }
         );
         setProducts(res.data.products);

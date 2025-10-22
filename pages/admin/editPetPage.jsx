@@ -9,6 +9,25 @@ const speciesList = ["Dog", "Cat", "Bird", "Fish", "Other"];
 const sizeList = ["Unknown", "Small", "Medium", "Large", "Giant"];
 const sexList = ["Unknown", "Male", "Female"];
 
+// 💡 FIX: Reusable input component moved outside to prevent re-rendering issues
+const Input = ({ name, type = "text", placeholder, min, form, errors, handleChange }) => (
+  <div>
+    <input
+      type={type}
+      name={name}
+      value={form[name]}
+      min={min}
+      placeholder={placeholder}
+      onChange={handleChange}
+      className={`border p-3 rounded-xl w-full focus:ring-2 ${
+        errors[name] ? "border-red-500" : "border-gray-300"
+      }`}
+    />
+    {errors[name] && <span className="text-red-500 text-sm">{errors[name]}</span>}
+  </div>
+);
+
+
 export default function UpdatePetPage() {
   const navigate = useNavigate();
   const pet = useLocation().state?.pet;
@@ -43,7 +62,7 @@ export default function UpdatePetPage() {
     if (name === "name" && !value) msg = "Name required";
     if (["name", "breed", "color"].includes(name) && value && !letters.test(value))
       msg = "Only letters allowed";
-    if (name === "ageYears" && (value < 0 || value > 20)) msg = "Age 0–20";
+    if (name === "ageYears" && (value < 1 || value > 20)) msg = "Age 1–20";
     if (name === "price" && value < 1) msg = "Price > 0";
     setErrors((p) => ({ ...p, [name]: msg }));
   };
@@ -87,7 +106,7 @@ export default function UpdatePetPage() {
 
     try {
       setLoading(true);
-      await axios.put(`http://localhost:5000/api/pets/${pet.petId}`, form, {
+      await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/pets/${pet.petId}`, form, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
       toast.success("🐾 Pet updated!");
@@ -99,23 +118,7 @@ export default function UpdatePetPage() {
     }
   };
 
-  // Reusable input component
-  const Input = ({ name, type = "text", placeholder, min }) => (
-    <div>
-      <input
-        type={type}
-        name={name}
-        value={form[name]}
-        min={min}
-        placeholder={placeholder}
-        onChange={handleChange}
-        className={`border p-3 rounded-xl w-full focus:ring-2 ${
-          errors[name] ? "border-red-500" : "border-gray-300"
-        }`}
-      />
-      {errors[name] && <span className="text-red-500 text-sm">{errors[name]}</span>}
-    </div>
-  );
+  // 🗑️ Removed Input component definition from here.
 
   return (
     <div className="bg-white min-h-screen flex justify-center py-10">
@@ -133,13 +136,13 @@ export default function UpdatePetPage() {
           
           {/* Basic Info Section */}
           <section className="bg-white p-6 rounded-xl shadow-sm grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Input name="name" placeholder="Pet Name *" />
+            <Input name="name" placeholder="Pet Name *" form={form} errors={errors} handleChange={handleChange} />
             <select name="species" value={form.species} onChange={handleChange} className="border p-3 rounded-xl">
               <option value="">Select Species *</option>
               {speciesList.map((s) => <option key={s}>{s}</option>)}
             </select>
-            <Input name="breed" placeholder="Breed" />
-            <Input name="color" placeholder="Color" />
+            <Input name="breed" placeholder="Breed" form={form} errors={errors} handleChange={handleChange} />
+            <Input name="color" placeholder="Color" form={form} errors={errors} handleChange={handleChange} />
           </section>
 
           {/* Additional Info Section */}
@@ -147,7 +150,7 @@ export default function UpdatePetPage() {
             <select name="sex" value={form.sex} onChange={handleChange} className="border p-3 rounded-xl">
               {sexList.map((s) => <option key={s}>{s}</option>)}
             </select>
-            <Input name="ageYears" type="number" min="0" placeholder="Age (Years)" />
+            <Input name="ageYears" type="number" min="0" placeholder="Age (Years)" form={form} errors={errors} handleChange={handleChange} />
             <select name="size" value={form.size} onChange={handleChange} className="border p-3 rounded-xl">
               {sizeList.map((s) => <option key={s}>{s}</option>)}
             </select>
@@ -159,7 +162,7 @@ export default function UpdatePetPage() {
             className="border p-3 rounded-xl shadow-sm w-full" />
 
           {/* Price */}
-          <Input name="price" type="number" min="1" placeholder="Price (Rs.) *" />
+          <Input name="price" type="number" min="1" placeholder="Price (Rs.) *" form={form} errors={errors} handleChange={handleChange} />
 
           {/* Image Upload Section */}
           <section className="bg-white p-6 rounded-xl shadow-sm">

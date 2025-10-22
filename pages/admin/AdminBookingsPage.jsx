@@ -15,7 +15,7 @@ export default function AdminBookingsPage() {
 
   const fetchBookings = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/booking", {
+      const res = await axios.get(import.meta.env.VITE_BACKEND_URL + "/api/booking", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -32,7 +32,7 @@ export default function AdminBookingsPage() {
   const handleStatusChange = async (id, status) => {
     try {
       await axios.patch(
-        `http://localhost:5000/api/booking/${id}/status`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/booking/${id}/status`,
         { status },
         {
           headers: {
@@ -69,7 +69,7 @@ export default function AdminBookingsPage() {
             <button
               onClick={async () => {
                 try {
-                  await axios.delete(`http://localhost:5000/api/booking/${id}`, {
+                  await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/booking/${id}`, {
                     headers: {
                       Authorization: `Bearer ${localStorage.getItem("token")}`,
                     },

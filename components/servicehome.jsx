@@ -9,7 +9,7 @@ export default function ServiceHome() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/service")
+      .get(import.meta.env.VITE_BACKEND_URL + "/api/service")
       .then((res) => {
         setServices(res.data);
         setLoading(false);

@@ -6,7 +6,7 @@ export default function CategoriesBanner() {
       name: "Pet Foods",
       desc: "Nutritious meals your pets love.",
       icon: <FaBone className="text-5xl text-purple-600 mb-3" />,
-      link: "#pet-foods", // 👈 Section ID
+      link: "#pet-foods", 
       color: "from-purple-100 via-pink-100 to-pink-200",
     },
     {
